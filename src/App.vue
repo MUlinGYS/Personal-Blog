@@ -1,21 +1,27 @@
 <template>
 	<div id="app">
-		<keep-alive>
-			<router-view></router-view>
-		</keep-alive>
+		<Header></Header>
+		<router-view v-slot="{ Component }">
+			<keep-alive>
+				<component :is="Component" />
+			</keep-alive>
+		</router-view>
 	</div>
 </template>
 
 <script lang="ts">
+	import Header from '../src/components/Header.vue';
 	export default {
 		name: 'App',
-		components: {},
+		components: {
+			Header,
+		},
 	};
 </script>
 
 <style>
 	body,
-	p {
-		margin: 0;
+	.app {
+		margin: 20px 20px 0 20px;
 	}
 </style>
