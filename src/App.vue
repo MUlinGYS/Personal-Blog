@@ -1,6 +1,5 @@
 <template>
 	<div id="app">
-		<Header></Header>
 		<router-view v-slot="{ Component }">
 			<keep-alive>
 				<component :is="Component" />
@@ -10,18 +9,15 @@
 </template>
 
 <script lang="ts">
-	import Header from '../src/components/Header.vue';
 	export default {
 		name: 'App',
-		components: {
-			Header,
-		},
+		components: {},
 	};
 </script>
 
 <style>
-	body,
-	.app {
-		margin: 20px 20px 0 20px;
+	body {
+		margin: 0;
+		overflow: hidden;
 	}
 </style>
