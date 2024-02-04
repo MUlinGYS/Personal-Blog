@@ -18,7 +18,12 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    // 个人设置
+    "experimentalDecorators": true,
+    "noImplicitAny": true,  // 在表达式和声明上有隐含的 any 类型时报错
+    "strictNullChecks": true, // 在严格的 null 检查模式下，null 和 undefined 值都不在每种类型的域值中，只允许用它们自己和 any 来赋值（有一个例外是 undefined 可以赋值到 void）
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
