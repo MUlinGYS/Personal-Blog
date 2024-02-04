@@ -1,6 +1,13 @@
 modules.exports = {
   lintOnSave: false,
   publicPath: '/',
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': 'src'
+      }
+    }
+  },
   devServer: {
     proxy: {
       '/seeyon': {
