@@ -4,6 +4,7 @@
 		<div
 			style="
 				width: 100vw;
+				height: calc(100% - 60px);
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -24,7 +25,7 @@
 <style scoped>
 	.headerimg {
 		position: relative;
-		width: 100vw;
+		width: 100%;
 		height: 500px;
 		overflow: hidden;
 		background-size: 100% 100%;
@@ -34,8 +35,7 @@
 
 	.rotate {
 		animation: rotation 5s infinite linear;
-		width: 400px;
-		height: 400px;
+		width: 23%;
 		border-radius: 50%;
 	}
 	@keyframes rotation {
