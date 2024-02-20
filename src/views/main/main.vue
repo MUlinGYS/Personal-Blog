@@ -3,7 +3,7 @@
 		v-model="activeName"
 		type="card"
 		class="demo-tabs"
-		style="padding: 0 10px"
+		style="padding: 0 10vw"
 		@tab-click="handleClick"
 	>
 		<el-tab-pane

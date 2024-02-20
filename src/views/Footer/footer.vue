@@ -149,7 +149,6 @@
 </template>
 
 <script setup lang="ts" name="Header">
-	import '@/assets/page.min.css';
 	import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 	// 可以在这里设置起始时间戳
