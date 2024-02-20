@@ -165,7 +165,7 @@
 		return daysPassed + ' 天 - ' + hoursPassed + ' 小时';
 	});
 
-	let intervalId: number | undefined;
+	let intervalId: ReturnType<typeof setInterval>;
 
 	onMounted(() => {
 		intervalId = setInterval(() => {
