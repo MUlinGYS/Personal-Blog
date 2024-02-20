@@ -3,31 +3,36 @@
 		v-model="activeName"
 		type="card"
 		class="demo-tabs"
+		style="padding: 0 10vw"
 		@tab-click="handleClick"
 	>
 		<el-tab-pane
-			label="User"
+			label="首页"
 			name="first"
-			>User</el-tab-pane
-		>
+			><Tweets></Tweets
+		></el-tab-pane>
 		<el-tab-pane
-			label="Config"
+			label="资源链接"
 			name="second"
-			>Config</el-tab-pane
-		>
+			><Resource></Resource
+		></el-tab-pane>
 		<el-tab-pane
-			label="Role"
+			label="技术锦囊"
 			name="third"
-			>Role</el-tab-pane
-		>
+			><Tips></Tips
+		></el-tab-pane>
 		<el-tab-pane
-			label="Task"
+			label="归档"
 			name="fourth"
-			>Task</el-tab-pane
-		>
+			><Pigeonhole></Pigeonhole
+		></el-tab-pane>
 	</el-tabs>
 </template>
 <script lang="ts" setup name="main">
+	import Tweets from './branch/AllTweets/tweets.vue';
+	import Pigeonhole from './branch/pigeonhole/pigeonhole.vue';
+	import Resource from './branch/resource/resource.vue';
+	import Tips from './branch/Tips/Tips.vue';
 	import { ref } from 'vue';
 	import type { TabsPaneContext } from 'element-plus';
 
@@ -43,5 +48,9 @@
 		color: #6b778c;
 		font-size: 32px;
 		font-weight: 600;
+	}
+
+	.demo-tabs > .el-tabs__content {
+		padding: 0 !important;
 	}
 </style>
