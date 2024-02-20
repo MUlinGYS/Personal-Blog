@@ -3,6 +3,7 @@
 		<el-container>
 			<el-header><Header></Header></el-header>
 			<el-main> <router-view></router-view></el-main>
+			<el-divider border-style="dashed" />
 			<el-footer><Footer></Footer></el-footer>
 		</el-container>
 	</div>
