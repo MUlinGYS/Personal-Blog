@@ -10,18 +10,30 @@
 			><h2 style="color: white">个人博客</h2></el-menu-item
 		>
 		<div class="flex-grow" />
-		<el-menu-item index="1">Processing Center</el-menu-item>
-		<el-sub-menu index="2">
-			<template #title>Workspace</template>
+		<el-menu-item
+			index="1"
+			style="color: white"
+			>首页</el-menu-item
+		>
+		<el-sub-menu
+			index="2"
+			style="color: white !important"
+		>
+			<template
+				#title
+				style="color: black"
+				>设置</template
+			>
 			<el-menu-item
 				index="2-1"
-				style="background-color: transparent !important"
-				>item one</el-menu-item
+				style="color: black !important"
+				>个人设置</el-menu-item
 			>
-			<el-sub-menu index="2-2">
-				<template #title>item four</template>
-				<el-menu-item index="2-4-1">item one</el-menu-item>
-			</el-sub-menu>
+			<el-menu-item
+				index="2-1"
+				style="color: black !important"
+				>推文设置</el-menu-item
+			>
 		</el-sub-menu>
 	</el-menu>
 </template>
@@ -54,5 +66,19 @@
 	.el-menu-item:focus,
 	.el-menu-item:active {
 		outline: none;
+	}
+
+	.el-menu--horizontal > .el-menu-item.is-active {
+		border-bottom: 2px solid white !important;
+		color: white !important;
+	}
+
+	.el-menu--horizontal > .el-menu-item.is-active {
+		border-bottom: 2px solid white !important;
+		color: white !important;
+	}
+
+	html:root {
+		--el-menu-text-color: white !important;
 	}
 </style>
