@@ -169,6 +169,7 @@
 
 <script setup lang="ts" name="Header">
 	import '@/assets/page.mini.css';
+
 	import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 	//运行时间
