@@ -14,6 +14,8 @@
 		<el-drawer
 			v-model="drawer"
 			:with-header="false"
+			class="moyu"
+			@click="drawer = false"
 		>
 			<img src="https://api.vvhan.com/api/moyu" />
 		</el-drawer>
@@ -83,19 +85,20 @@
 </script>
 
 <style lang="less" scoped>
-	.el-drawer {
-		width: auto !important;
-	}
-	.el-drawer__body {
-		overflow: hidden !important;
+	:deep(.moyu .el-drawer__body) {
 		padding: 0 !important;
+		overflow: hidden !important;
 	}
-	.el-card {
+	:deep(.el-card) {
 		width: auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		padding: 10px !important;
+	}
+	:deep(.el-drawer.rtl) {
+		width: auto !important;
 	}
 	.music-cover {
 		width: 100px;
@@ -128,8 +131,5 @@
 		flex-direction: column !important;
 		align-items: center !important;
 		justify-content: center !important;
-	}
-	.el-card {
-		padding: 10px !important;
 	}
 </style>
