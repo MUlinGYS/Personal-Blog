@@ -15,9 +15,4 @@
 	};
 </script>
 
-<style>
-	body {
-		margin: 0;
-		/* overflow: hidden;页面上下留白滚动 */
-	}
-</style>
+<style></style>
