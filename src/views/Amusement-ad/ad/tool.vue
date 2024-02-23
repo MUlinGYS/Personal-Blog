@@ -13,6 +13,7 @@
 				v-model="inputValue"
 				@keyup.enter="fetchIco"
 				style="width: 100%"
+				placeholder="请输入网站地址"
 			/>
 			<el-button
 				type="primary"
@@ -26,7 +27,7 @@
 				style="width: 100%; height: auto; padding-top: 10px"
 				v-if="wds"
 			/>
-			<p v-if="inputValue !== '' && !validUrl">参数似乎不正确</p>
+			<p v-if="checkInput && inputValue != '' && !validUrl">参数似乎不正确</p>
 		</el-card>
 		<el-empty description="工具位" />
 	</div>
@@ -39,8 +40,10 @@
 	const validUrl = ref(false); // 用于指示URL是否有效
 	const wds = ref(false); // 控制展示的标识
 	const icoUrl = ref(''); // 存储获取到的图片的url
+	const checkInput = ref(false); // 用于判断是否调用fetchIco方法
 
 	const fetchIco = () => {
+		checkInput.value = true;
 		let tempUrl = `https://api.vvhan.com/api/ico?url=${inputValue.value}`;
 		let tempImg = new Image();
 		tempImg.src = tempUrl;
