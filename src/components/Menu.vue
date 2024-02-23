@@ -15,38 +15,31 @@
 			style="color: white"
 			>首页</el-menu-item
 		>
-		<el-sub-menu
+		<el-menu-item
 			index="2"
-			style="color: white !important"
+			style="color: white"
+			>隐藏</el-menu-item
 		>
-			<template
-				#title
-				style="color: black"
-				>设置</template
-			>
-			<el-menu-item
-				index="2-1"
-				style="color: black !important"
-				>个人设置</el-menu-item
-			>
-			<el-menu-item
-				index="2-1"
-				style="color: black !important"
-				>推文设置</el-menu-item
-			>
-		</el-sub-menu>
 	</el-menu>
 </template>
 
 <script lang="ts" setup>
 	import { ref } from 'vue';
+	import { useStore } from 'vuex';
+
+	const store = useStore();
 
 	const activeIndex = ref('1');
-	const handleSelect = (key: string, keyPath: string[]) => {
-		console.log(key, keyPath);
+	const handleSelect = (key: string) => {
+		if (key === '2') {
+			store.commit('setShowContent', false);
+			store.commit('setHide', false);
+		} else if (key === '1') {
+			store.commit('setShowContent', true);
+			store.commit('setHide', true);
+		}
 	};
 </script>
-
 <style>
 	.flex-grow {
 		flex-grow: 1;
