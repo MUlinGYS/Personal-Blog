@@ -4,6 +4,7 @@
 			style="
 				width: auto;
 				display: flex;
+				margin-top: 16px;
 				justify-content: center;
 				alignitems: center;
 			"
