@@ -3,6 +3,7 @@
 		v-model="activeName"
 		type="card"
 		class="demo-tabs"
+		:stretch="true"
 		style="width: 80%; padding: 0 1vw"
 		@tab-click="handleClick"
 	>
@@ -52,5 +53,26 @@
 
 	.demo-tabs > .el-tabs__content {
 		padding: 0 !important;
+	}
+
+	:deep(.el-tabs__header) {
+		border-radius: 7px;
+		box-shadow: inset 0 0 50px rgb(255, 255, 255);
+	}
+
+	:deep(.el-tabs__item) {
+		border-bottom: 10px !important;
+	}
+
+	:deep(.el-tabs__nav) {
+		border-radius: 7px !important;
+	}
+
+	:deep(.el-tabs__item.is-active) {
+		color: rgb(0, 57, 163) !important;
+	}
+
+	:deep(.el-tabs__item:hover) {
+		color: rgb(135, 132, 132);
 	}
 </style>
