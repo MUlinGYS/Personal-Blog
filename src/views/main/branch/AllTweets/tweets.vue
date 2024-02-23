@@ -1,6 +1,7 @@
 <template>
 	<!-- 推荐位 -->
-	<div style="padding: 2vw">
+	<p style="text-align: center; margin: 0">{{ text }}</p>
+	<div style="padding: 16px 2vw">
 		<el-carousel
 			height="400px"
 			direction="vertical"
@@ -36,7 +37,7 @@
 
 	<el-card shadow="hover">
 		<template #header>
-			<span>推文name</span>
+			<span>推文name+时间</span>
 		</template>
 		<div
 			v-for="o in 4"
@@ -45,7 +46,7 @@
 		>
 			{{ '内容 ' + o }}
 		</div>
-		<template #footer>其他内容</template>
+		<template #footer>备注</template>
 	</el-card>
 </template>
 
@@ -89,6 +90,13 @@
 		const images = await Promise.all(fetches);
 		// 将返回的图片信息赋值给imageInfo
 		imageInfo.value = images;
+	});
+
+	const text = ref('');
+
+	onMounted(async () => {
+		const response = await axios.get('https://api.vvhan.com/api/ian');
+		text.value = response.data;
 	});
 </script>
 <style scoped>
