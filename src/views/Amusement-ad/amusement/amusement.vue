@@ -7,6 +7,7 @@
 			round
 			style="
 				background-color: transparent;
+				margin-top: 11px;
 				box-shadow: inset 0 0 50px rgb(255, 167, 167);
 			"
 			@click="drawer = true"
