@@ -35,19 +35,35 @@
 		</el-carousel>
 	</div>
 
-	<el-card shadow="hover">
-		<template #header>
-			<span>推文name+时间</span>
-		</template>
-		<div
-			v-for="o in 4"
-			:key="o"
-			class="text item"
+	<ul
+		v-infinite-scroll="load"
+		class="infinite-list"
+		style="overflow: auto"
+		infinite-scroll-distance="10px"
+	>
+		<li
+			v-for="i in count"
+			:key="i"
+			class="infinite-list-item"
 		>
-			{{ '内容 ' + o }}
-		</div>
-		<template #footer>备注</template>
-	</el-card>
+			<el-card
+				shadow="hover"
+				style="width: 100%"
+			>
+				<template #header>
+					<span>推文name+时间</span>
+				</template>
+				<div
+					v-for="o in 4"
+					:key="o"
+					class="text item"
+				>
+					{{ '内容 ' + o }}
+				</div>
+				<template #footer>备注</template>
+			</el-card>
+		</li>
+	</ul>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +114,12 @@
 		const response = await axios.get('https://api.vvhan.com/api/ian');
 		text.value = response.data;
 	});
+
+	//无限滚动count.value += 10;添加一个+号
+	const count = ref(0);
+	const load = () => {
+		count.value = 10;
+	};
 </script>
 <style scoped>
 	.el-carousel__item h3 {
@@ -114,5 +136,25 @@
 
 	.el-carousel__item:nth-child(2n + 1) {
 		background-color: #d3dce6;
+	}
+
+	/* 滚动 */
+	.infinite-list {
+		height: 650px;
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+	.infinite-list .infinite-list-item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: auto;
+		background: var(--el-color-primary-light-9);
+		margin: 10px;
+		color: var(--el-color-primary);
+	}
+	.infinite-list .infinite-list-item + .list-item {
+		margin-top: 10px;
 	}
 </style>
