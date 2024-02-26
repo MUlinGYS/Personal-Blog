@@ -14,10 +14,23 @@
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
 </body>
-<style scoped>
+<style lang="less">
   body {
     margin: 0;
     /* overflow: hidden;页面上下留白滚动 */
+  }
+
+  /* 添加隐藏滚动条的代码 */
+  body::-webkit-scrollbar {
+    /* WebKit浏览器 */
+    display: none;
+  }
+
+  body {
+    -ms-overflow-style: none;
+    /* IE 10+ */
+    scrollbar-width: none;
+    /* Firefox */
   }
 </style>
 
