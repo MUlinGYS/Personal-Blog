@@ -60,7 +60,7 @@
 				>
 					{{ '内容 ' + o }}
 				</div>
-				<template #footer>备注</template>
+				<template #footer>备注:无</template>
 			</el-card>
 		</li>
 	</ul>
@@ -118,7 +118,7 @@
 	//无限滚动count.value += 10;添加一个+号
 	const count = ref(0);
 	const load = () => {
-		count.value = 10;
+		count.value = 4;
 	};
 </script>
 <style scoped>
