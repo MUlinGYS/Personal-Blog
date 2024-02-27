@@ -10,21 +10,25 @@
 		<el-tab-pane
 			label="首页"
 			name="first"
+			:lazy="true"
 			><Tweets></Tweets
 		></el-tab-pane>
 		<el-tab-pane
 			label="资源链接"
 			name="second"
+			:lazy="true"
 			><Resource></Resource
 		></el-tab-pane>
 		<el-tab-pane
 			label="技术锦囊"
 			name="third"
+			:lazy="true"
 			><Tips></Tips
 		></el-tab-pane>
 		<el-tab-pane
 			label="归档"
 			name="fourth"
+			:lazy="true"
 			><Pigeonhole></Pigeonhole
 		></el-tab-pane>
 	</el-tabs>
