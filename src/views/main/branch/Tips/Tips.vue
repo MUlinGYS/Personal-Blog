@@ -36,6 +36,7 @@
 	const load = () => {
 		count.value += 2;
 	};
+	console.log('tips被加载');
 </script>
 
 <style>

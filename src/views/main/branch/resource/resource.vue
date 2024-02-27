@@ -36,6 +36,7 @@
 	const load = () => {
 		count.value += 2;
 	};
+	console.log('resource被加载');
 </script>
 
 <style>
