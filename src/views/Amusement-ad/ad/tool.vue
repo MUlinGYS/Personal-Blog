@@ -111,7 +111,7 @@
 			<p v-if="checkInput && inputValue != '' && !validUrl">参数似乎不正确</p>
 		</el-card>
 
-		<el-empty description="工具位" />
+		<el-empty description="工具位待添加" />
 	</div>
 </template>
 

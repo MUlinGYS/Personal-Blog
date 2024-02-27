@@ -43,7 +43,7 @@
 				><el-icon><SwitchButton /></el-icon
 			></el-button>
 		</el-card>
-		<el-empty description="娱乐位" />
+		<el-empty description="娱乐位待添加" />
 	</div>
 </template>
 <script setup lang="ts">
