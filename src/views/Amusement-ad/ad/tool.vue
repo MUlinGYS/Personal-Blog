@@ -118,7 +118,6 @@
 <script setup lang="ts">
 	import { ref, reactive } from 'vue';
 	import axios from 'axios';
-	import { h } from 'vue';
 	import { ElNotification } from 'element-plus';
 
 	const inputValue = ref('');
