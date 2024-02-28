@@ -19,6 +19,12 @@ const routes = [
             }
         ],
     },
+    {
+        name: 'publishpage',
+        path: '/publishpage',
+        component: () => import('../views/Publish page/PublishPage.vue'),
+    },
+    
 ]
 
 const router = createRouter({
