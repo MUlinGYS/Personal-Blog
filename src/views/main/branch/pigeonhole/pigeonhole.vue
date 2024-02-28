@@ -55,8 +55,53 @@
 			placement="top"
 		>
 			<el-card>
-				<h4>Update Github template</h4>
-				<p>Tom committed {{ activity.content }}</p>
+				<div class="demo-collapse">
+					<el-collapse
+						v-model="activeName"
+						accordion
+					>
+						<el-collapse-item name="1"
+							><template #title>
+								标题{{ activity.content
+								}}<el-icon class="header-icon">
+									<info-filled />
+								</el-icon>
+							</template>
+							<div>
+								Consistent with real life: in line with the process and logic of
+								real life, and comply with languages and habits that the users
+								are used to;
+							</div>
+						</el-collapse-item>
+						<el-collapse-item
+							title="Feedback"
+							name="2"
+						>
+							<div>
+								Operation feedback: enable the users to clearly perceive their
+								operations by style updates and interactive effects;
+							</div>
+						</el-collapse-item>
+						<el-collapse-item
+							title="Efficiency"
+							name="3"
+						>
+							<div>
+								Simplify the process: keep operating process simple and
+								intuitive;
+							</div>
+						</el-collapse-item>
+						<el-collapse-item
+							title="Controllability"
+							name="4"
+						>
+							<div>
+								Decision making: giving advices about operations is acceptable,
+								but do not make decisions for the users;
+							</div>
+						</el-collapse-item>
+					</el-collapse>
+				</div>
 			</el-card>
 		</el-timeline-item>
 	</el-timeline>
@@ -67,6 +112,7 @@
 	import { useTransition } from '@vueuse/core';
 	import { ChatLineRound, Male } from '@element-plus/icons-vue';
 
+	const activeName = ref('1');
 	const source = ref(0);
 	const outputValue = useTransition(source, {
 		duration: 1500,
