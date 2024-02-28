@@ -143,7 +143,13 @@
 		height: 650px;
 		padding: 0;
 		margin: 0;
+		overflow-x: hidden !important;
+		overflow-y: auto !important;
 		list-style: none;
+	}
+
+	.infinite-list::-webkit-scrollbar {
+		display: none;
 	}
 	.infinite-list .infinite-list-item {
 		display: flex;
