@@ -1,100 +1,110 @@
 <template>
-	<el-card>
-		<el-space
-			direction="vertical"
-			style="width: 100%"
-		>
-			<!-- 这个div里写入一个富文本编辑器 -->
-			<el-card style="width: 97vw">
-				<div>
-					<el-input
-						v-model="input0"
-						placeholder="标题"
-					>
-						<template #prepend>标题</template>
-					</el-input>
-				</div>
-			</el-card>
-			<el-card
-				class="ueditor"
-				style="width: 97vw"
-			>
-				<vue-ueditor-wrap
-					v-model="msg"
-					:config="editorConfig"
-					editor-id="editor-demo-01"
-				></vue-ueditor-wrap>
-			</el-card>
-			<!-- <el-empty description="富文本编辑器正在开发中，敬请期待！" /> -->
-			<el-card style="width: 97vw; display: flex; justify-content: center">
-				<el-rate
-					v-model="value"
-					show-score
-					allow-half
-					size="large"
-					score-template="为这篇文章定级"
-			/></el-card>
-			<el-card style="width: 97vw">
-				<div>
-					<el-input
-						v-model="input1"
-						placeholder="网站地址或本机文件地址"
-					>
-						<template #prepend>
-							<el-select
-								v-model="select"
-								placeholder="协议"
-								style="width: 115px"
+	<el-card style="margin: 10px">
+		<el-page-header @back="goBack">
+			<template #content>
+				<span class="text-large font-600 mr-3"> 文章发布 </span>
+			</template>
+			<div class="mt-4 text-sm font-bold">
+				<el-space
+					direction="vertical"
+					style="width: 100%"
+				>
+					<!-- 这个div里写入一个富文本编辑器 -->
+					<el-card style="width: 97vw">
+						<div>
+							<el-input
+								v-model="input0"
+								placeholder="标题"
 							>
-								<el-option
-									label="Http://"
-									value="1"
-								/>
-								<el-option
-									label="https://"
-									value="2"
-								/>
-								<el-option
-									label="file://"
-									value="3"
-								/>
-								<el-option
-									label="其他（自行输入）"
-									value="4"
-								/>
-							</el-select>
-						</template>
-					</el-input>
-				</div>
-				<div class="mt-4">
-					<el-input
-						v-model="input3"
-						class="input-with-select"
+								<template #prepend>标题</template>
+							</el-input>
+						</div>
+					</el-card>
+					<el-card
+						class="ueditor"
+						style="width: 97vw"
 					>
-						<template #prepend>标签</template>
-					</el-input>
-				</div>
-				<div class="mt-4">
-					<el-input
-						v-model="input2"
-						placeholder="输入备注信息"
+						<vue-ueditor-wrap
+							v-model="msg"
+							:config="editorConfig"
+							editor-id="editor-demo-01"
+						></vue-ueditor-wrap>
+					</el-card>
+					<!-- <el-empty description="富文本编辑器正在开发中，敬请期待！" /> -->
+					<el-card style="width: 97vw; display: flex; justify-content: center">
+						<el-rate
+							v-model="value"
+							show-score
+							allow-half
+							size="large"
+							score-template="为这篇文章定级"
+					/></el-card>
+					<el-card style="width: 97vw">
+						<div>
+							<el-input
+								v-model="input1"
+								placeholder="网站地址或本机文件地址"
+							>
+								<template #prepend>
+									<el-select
+										v-model="select"
+										placeholder="协议"
+										style="width: 115px"
+									>
+										<el-option
+											label="Http://"
+											value="1"
+										/>
+										<el-option
+											label="https://"
+											value="2"
+										/>
+										<el-option
+											label="file://"
+											value="3"
+										/>
+										<el-option
+											label="其他（自行输入）"
+											value="4"
+										/>
+									</el-select>
+								</template>
+							</el-input>
+						</div>
+						<div class="mt-4">
+							<el-input
+								v-model="input3"
+								class="input-with-select"
+							>
+								<template #prepend>标签</template>
+							</el-input>
+						</div>
+						<div class="mt-4">
+							<el-input
+								v-model="input2"
+								placeholder="输入备注信息"
+							>
+								<template #prepend>备注</template>
+							</el-input>
+						</div>
+					</el-card>
+					<el-button
+						style="width: 97vw"
+						type="primary"
+						round
 					>
-						<template #prepend>备注</template>
-					</el-input>
-				</div>
-			</el-card>
-			<el-button
-				style="width: 97vw"
-				type="primary"
-				round
-			>
-				发布<el-icon class="el-icon--right"><Upload /></el-icon>
-			</el-button>
-		</el-space>
+						发布<el-icon class="el-icon--right"><Upload /></el-icon>
+					</el-button>
+				</el-space>
+			</div>
+		</el-page-header>
 	</el-card>
 </template>
 
 <script setup lang="ts">
+	// 导入vue-router
+	import { useRouter } from 'vue-router';
+
 	import { ref } from 'vue';
 
 	const input0 = ref('');
@@ -111,6 +121,13 @@
 		UEDITOR_HOME_URL: '/UEditor/',
 		serverUrl: '//ueditor.zhenghaochuan.com/cos',
 	});
+
+	const router = useRouter(); // 获取 router 对象
+
+	//返回
+	const goBack = () => {
+		router.push('/index'); // 跳转到 /index 路由
+	};
 </script>
 
 <style lang="less">
