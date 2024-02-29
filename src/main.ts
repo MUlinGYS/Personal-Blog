@@ -6,6 +6,8 @@ import store from './store';
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import VueUeditorWrap from 'vue-ueditor-wrap';// 富文本编辑器ueditor
+// import './api/mock' //mockjs模拟后端数据//暂时弃用
+
 
 const app = createApp(App)
 // 注册 Element Plus 图标
