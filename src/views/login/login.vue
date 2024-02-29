@@ -11,40 +11,34 @@
 			<div id="right_card">
 				<el-card class="el-card">
 					<h2>欢迎登录</h2>
-					<div class="login">
+					<form
+						@submit.prevent="handleLogin"
+						class="login"
+					>
 						<input
 							type="text"
 							placeholder="请输入账号"
+							autocomplete="username"
+							v-model="account"
 						/>
 						<input
 							type="password"
 							placeholder="请输入密码"
+							autocomplete="current-password"
+							v-model="password"
 						/>
-					</div>
-					<div class="remember">
-						<div style="height: 31px; display: flex; align-items: center">
-							<input
-								type="checkbox"
-								id="remember-me"
-							/>
-						</div>
 						<div
-							style="
-								height: 31px;
-								display: flex;
-								align-items: center;
-								margin-left: 5px;
-							"
+							id="btn"
+							style="margin-top: 20px"
 						>
-							<label for="remember-me">记住我</label>
+							<button
+								type="submit"
+								class="loginbtn"
+							>
+								登陆
+							</button>
 						</div>
-					</div>
-
-					<div id="btn">
-						<router-link to="/index">
-							<button class="loginbtn">登陆</button>
-						</router-link>
-					</div>
+					</form>
 				</el-card>
 			</div>
 		</div>
@@ -53,7 +47,12 @@
 
 <script lang="ts" setup name="appLogin">
 	import { ref, onUnmounted } from 'vue';
+	import { useRouter } from 'vue-router';
+	import { getUsers } from './../../api/detailed.js';
 
+	const account = ref('');
+	const password = ref('');
+	const router = useRouter();
 	const isMobile = ref(false);
 
 	function updateMobileView() {
@@ -66,6 +65,31 @@
 	onUnmounted(() => {
 		window.removeEventListener('resize', updateMobileView);
 	});
+
+	const handleLogin = async () => {
+		try {
+			const response = await getUsers();
+
+			// 从相应数据中获取用户数组
+			// @ts-ignore
+			const users = response.data.account;
+
+			const user = users.find(
+				(user: { account: string; password: string }) =>
+					user.account === account.value && user.password === password.value
+			);
+
+			if (user) {
+				// 如果找到用户，则导航到主页
+				router.push('/index');
+			} else {
+				// 否则，提示用户账号或密码错误
+				console.log('账号或密码错误');
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 </script>
 
 <style lang="less" scoped>
@@ -144,48 +168,7 @@
 				outline: none;
 			}
 		}
-		.remember {
-			display: flex;
-			align-items: center;
-			justify-content: flex-end;
 
-			label {
-				margin: 0 !important;
-			}
-
-			#remember-me {
-				appearance: none; /* Clear browser default styles */
-				width: 12px;
-				height: 12px;
-				background: #fff;
-				border: 1px solid;
-				border-radius: 50%;
-				outline: none;
-				position: relative;
-			}
-
-			#remember-me:before {
-				content: '';
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				width: 10px;
-				height: 10px;
-				border-radius: 50%;
-				background: transparent;
-				transition: background 0.3s ease;
-			}
-
-			#remember-me:checked:before {
-				background: #333;
-			}
-		}
-		.message {
-			margin-top: 26px;
-			font-size: 0.9rem;
-			color: red;
-		}
 		.loginbtn {
 			width: 100%;
 			height: 35px;
