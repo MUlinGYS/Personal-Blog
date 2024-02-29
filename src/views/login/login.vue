@@ -49,6 +49,7 @@
 	import { ref, onUnmounted } from 'vue';
 	import { useRouter } from 'vue-router';
 	import { getUsers } from './../../api/detailed.js';
+	import Cookies from 'js-cookie';
 
 	const account = ref('');
 	const password = ref('');
@@ -80,7 +81,9 @@
 			);
 
 			if (user) {
-				// 如果找到用户，则导航到主页
+				const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
+				console.log('生成的 token：', token);
+				Cookies.set('token', token); // 将生成的 token 存入 cookie
 				router.push('/index');
 			} else {
 				// 否则，提示用户账号或密码错误
