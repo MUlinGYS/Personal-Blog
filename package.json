@@ -16,8 +16,9 @@
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "vue": "^3.3.11",
-    "vue-router": "^4.2.5",
+    "vue-router": "^4.0.13",
     "vue-ueditor-wrap": "3.x",
+    "vue3-cookies": "^1.0.6",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
