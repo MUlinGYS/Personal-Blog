@@ -1,7 +1,10 @@
 <template>
 	<div id="login">
 		<div id="contain">
-			<div id="left_card">
+			<div
+				id="left_card"
+				v-if="!isMobile"
+			>
 				<h1>欢迎来到我的Personal-Blog</h1>
 				<span>Welcome to my Personal-Blog</span>
 			</div>
@@ -19,15 +22,24 @@
 						/>
 					</div>
 					<div class="remember">
-						<input
-							type="radio"
-							id="psd"
-							class="radio"
-						/><label for="psd"></label>记住密码
+						<div style="height: 31px; display: flex; align-items: center">
+							<input
+								type="checkbox"
+								id="remember-me"
+							/>
+						</div>
+						<div
+							style="
+								height: 31px;
+								display: flex;
+								align-items: center;
+								margin-left: 5px;
+							"
+						>
+							<label for="remember-me">记住我</label>
+						</div>
 					</div>
-					<div class="message">
-						<span></span>
-					</div>
+
 					<div id="btn">
 						<router-link to="/index">
 							<button class="loginbtn">登陆</button>
@@ -38,7 +50,23 @@
 		</div>
 	</div>
 </template>
-<script lang="ts" setup name="appLogin"></script>
+
+<script lang="ts" setup name="appLogin">
+	import { ref, onUnmounted } from 'vue';
+
+	const isMobile = ref(false);
+
+	function updateMobileView() {
+		isMobile.value = window.innerWidth <= 768;
+	}
+
+	updateMobileView();
+	window.addEventListener('resize', updateMobileView);
+
+	onUnmounted(() => {
+		window.removeEventListener('resize', updateMobileView);
+	});
+</script>
 
 <style lang="less" scoped>
 	@keyframes animate {
@@ -75,7 +103,7 @@
 		text-align: center;
 		align-items: center;
 		#left_card {
-			width: 500px;
+			width: 550px;
 			h1 {
 				color: white;
 				white-space: nowrap;
@@ -88,7 +116,7 @@
 			}
 		}
 		#right_card {
-			width: 400px;
+			width: 350px;
 			.el-card {
 				margin: 0 45px;
 				border-radius: 25px;
@@ -101,7 +129,7 @@
 		justify-content: center;
 		align-items: center;
 		h2 {
-			margin-bottom: 5px;
+			margin-bottom: 0px;
 		}
 		.login {
 			input {
@@ -117,41 +145,40 @@
 			}
 		}
 		.remember {
-			float: right;
-			height: 26px;
-			text-align: center;
-			font-size: 1rem;
-			position: relative;
-			.radio {
-				height: 1rem;
-				width: 1rem;
-				vertical-align: middle;
-				margin-top: -2px;
-				opacity: 0;
-			}
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+
 			label {
-				position: absolute;
-				left: -2px;
-				top: 5px;
-				height: 1rem;
-				width: 1rem;
-				vertical-align: middle;
-				margin-top: -2px;
-				border-radius: 50%;
-				border: 1px solid black;
+				margin: 0 !important;
 			}
-			//radio选中后修改labe内的内容 :after 选择器在被选元素的内容后面插入内容。
-			input:checked + label::after {
-				content: '';
-				width: 0.6rem;
-				height: 0.6rem;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
+
+			#remember-me {
+				appearance: none; /* Clear browser default styles */
+				width: 12px;
+				height: 12px;
+				background: #fff;
+				border: 1px solid;
 				border-radius: 50%;
-				background-color: rgba(207, 38, 38, 0.8);
-				border: 1px solid rgba(207, 38, 38, 0.8);
+				outline: none;
+				position: relative;
+			}
+
+			#remember-me:before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background: transparent;
+				transition: background 0.3s ease;
+			}
+
+			#remember-me:checked:before {
+				background: #333;
 			}
 		}
 		.message {
