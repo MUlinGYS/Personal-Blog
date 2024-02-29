@@ -30,7 +30,9 @@
       "@/components/*": ["src/components/*"],
       "vuex": ["node_modules/vuex/types/index"]
     },
-    "types": ["node"]
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
   },
   "exclude": ["node_modules"],
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
