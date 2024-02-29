@@ -5,7 +5,7 @@
 				id="left_card"
 				v-if="!isMobile"
 			>
-				<h1>欢迎来到我的Personal-Blog</h1>
+				<h1>欢迎来到我的个人博客</h1>
 				<span>Welcome to my Personal-Blog</span>
 			</div>
 			<div id="right_card">
