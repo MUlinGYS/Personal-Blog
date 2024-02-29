@@ -50,6 +50,8 @@
 	import { useRouter } from 'vue-router';
 	import { getUsers } from './../../api/detailed.js';
 	import Cookies from 'js-cookie';
+	import { h } from 'vue';
+	import { ElNotification } from 'element-plus';
 
 	const account = ref('');
 	const password = ref('');
@@ -66,6 +68,13 @@
 	onUnmounted(() => {
 		window.removeEventListener('resize', updateMobileView);
 	});
+
+	const open1 = () => {
+		ElNotification({
+			title: '警告',
+			message: h('i', { style: 'color: teal' }, '密码或账户错误'),
+		});
+	};
 
 	const handleLogin = async () => {
 		try {
@@ -87,7 +96,7 @@
 				router.push('/index');
 			} else {
 				// 否则，提示用户账号或密码错误
-				console.log('账号或密码错误');
+				open1();
 			}
 		} catch (error) {
 			console.error(error);
