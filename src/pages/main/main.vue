@@ -33,10 +33,10 @@
 	</el-tabs>
 </template>
 <script lang="ts" setup name="main">
-	import Tweets from './branch/AllTweets/tweets.vue';
-	import Pigeonhole from './branch/pigeonhole/pigeonhole.vue';
-	import Resource from './branch/resource/resource.vue';
-	import Tips from './branch/Tips/Tips.vue';
+	import Tweets from './components/branch/AllTweets/tweets.vue';
+	import Pigeonhole from './components/branch/pigeonhole/pigeonhole.vue';
+	import Resource from './components/branch/resource/resource.vue';
+	import Tips from './components/branch/Tips/Tips.vue';
 	import { ref } from 'vue';
 	// import type { TabsPaneContext } from 'element-plus';
 
