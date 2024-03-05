@@ -1,7 +1,7 @@
 {
   "users": {
-    "data":{
-    "account":[
+    "data": {
+      "account": [
         {
           "account": "陈凯",
           "password": "XUEZHONGTINGYAN0"
@@ -14,23 +14,23 @@
           "account": "demo",
           "password": "demo"
         }
-    ]
-  },
-  "essay":{
-    "data":{
-      "essays":[
-        {
-          "essaysTitle": "这是一篇测试内容",
-          "detail": "测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容",
-          "remark":"无",
-          "author": "陈凯",
-          "time": "2020-05-10 10:00:00",
-          "like": 0,
-          "comment": 0,
-          "view": 0
-        }
-    ]
+      ]
+    },
+    "essay": {
+      "data": {
+        "essays": [
+          {
+            "essaysTitle": "这是一篇测试内容",
+            "detail": "测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容测试内容",
+            "remark": "无",
+            "author": "陈凯",
+            "time": "2020-05-10 10:00:00",
+            "like": 0,
+            "comment": 0,
+            "view": 0
+          }
+        ]
+      }
+    }
   }
-  }
-}
 }
