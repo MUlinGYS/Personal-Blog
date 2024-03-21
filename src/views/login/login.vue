@@ -48,7 +48,7 @@
 <script lang="ts" setup name="appLogin">
 	import { ref, onUnmounted } from 'vue';
 	import { useRouter } from 'vue-router';
-	import { getUsers } from './../../api/detailed.js';
+	// import { getUsers } from './../../api/detailed.js'; //db.json文件为本地接口
 	import Cookies from 'js-cookie';
 	import { h } from 'vue';
 	import { ElNotification } from 'element-plus';
@@ -76,30 +76,42 @@
 		});
 	};
 
-	const handleLogin = async () => {
-		try {
-			const response = await getUsers();
+	//---------------------登录接口（使用本地db.json文件）-------------------------
+	// const handleLogin = async () => {
+	// 	try {
+	// 		const response = await getUsers();
 
-			// 从相应数据中获取用户数组
-			// @ts-ignore
-			const users = response.data.account;
+	// 		// 从相应数据中获取用户数组
+	// 		// @ts-ignore
+	// 		const users = response.data.account;
 
-			const user = users.find(
-				(user: { account: string; password: string }) =>
-					user.account === account.value && user.password === password.value
-			);
+	// 		const user = users.find(
+	// 			(user: { account: string; password: string }) =>
+	// 				user.account === account.value && user.password === password.value
+	// 		);
 
-			if (user) {
-				const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
-				console.log('生成的 token：', token);
-				Cookies.set('token', token); // 将生成的 token 存入 cookie
-				router.push('/index');
-			} else {
-				// 否则，提示用户账号或密码错误
-				open1();
-			}
-		} catch (error) {
-			console.error(error);
+	// 		if (user) {
+	// 			const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
+	// 			console.log('生成的 token：', token);
+	// 			Cookies.set('token', token); // 将生成的 token 存入 cookie
+	// 			router.push('/index');
+	// 		} else {
+	// 			// 否则，提示用户账号或密码错误
+	// 			open1();
+	// 		}
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
+	const handleLogin = () => {
+		if (account.value === 'demo' && password.value === 'demo') {
+			const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
+			console.log('生成的 token：', token);
+			Cookies.set('token', token); // 将生成的 token 存入 cookie
+			router.push('/index');
+		} else {
+			// 否则，提示用户账号或密码错误
+			open1();
 		}
 	};
 </script>
