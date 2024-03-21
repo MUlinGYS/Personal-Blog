@@ -169,7 +169,7 @@
 </template>
 
 <script setup lang="ts" name="Header">
-	import '@/assets/page.mini.css';
+	import '../../assets/page.min.css';
 
 	import { ref, computed, onMounted, onUnmounted } from 'vue';
 
