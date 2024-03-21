@@ -73,8 +73,10 @@
 
 	onMounted(async () => {
 		try {
-			const res = await axios.get('https://api.vvhan.com/api/girl?type=json');
-			bgImage.value = res.data.imgurl;
+			const res = await axios.get(
+				'https://api.vvhan.com/api/wallpaper/pcGirl?type=json'
+			);
+			bgImage.value = res.data.url;
 		} catch (error) {
 			console.error(error);
 		}

@@ -111,8 +111,10 @@
 	const text = ref('');
 
 	onMounted(async () => {
-		const response = await axios.get('https://api.vvhan.com/api/ian');
-		text.value = response.data;
+		const response = await axios.get(
+			'https://api.vvhan.com/api/ian/rand?type=json'
+		);
+		text.value = response.data.data.content + '——  ' + response.data.data.form;
 	});
 
 	//无限滚动count.value += 10;添加一个+号
