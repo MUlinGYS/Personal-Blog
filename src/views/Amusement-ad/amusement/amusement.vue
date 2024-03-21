@@ -62,7 +62,7 @@
 	// 抽取成单独的函数方便复用
 	const fetchMusic: () => Promise<void> = async () => {
 		const response = await axios.get(
-			'http://api.vvhan.com/api/wyMusic/%E6%96%B0%E6%AD%8C%E6%A6%9C?type=json'
+			'https://api.vvhan.com/api/wyMusic/%E6%96%B0%E6%AD%8C%E6%A6%9C?type=json'
 		);
 		const fetchedMusic = response.data.info;
 
