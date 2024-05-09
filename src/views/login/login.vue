@@ -103,6 +103,8 @@
 	// 		console.error(error);
 	// 	}
 	// };
+
+	//本地定死数据登录
 	const handleLogin = () => {
 		if (account.value === 'demo' && password.value === 'demo') {
 			const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
