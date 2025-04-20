@@ -62,6 +62,54 @@ export default defineComponent({
 					'https://api.vvhan.com/api/wallpaper/pcGirl?type=json'
 				);
 				bgImage.value = res.data.url;
+
+				// 添加樱花特效
+				const script = document.createElement('script');
+				script.src = 'https://api.vvhan.com/api/script/yinghua';
+
+				// 保存原始的console方法
+				const originalConsole = {
+					log: console.log,
+					group: console.group,
+					groupEnd: console.groupEnd
+				};
+
+				// 重写console方法
+				['log', 'group', 'groupEnd'].forEach(method => {
+					console[method] = function () {
+						// 直接返回，不执行任何操作
+						return;
+					};
+				});
+
+				document.body.appendChild(script);
+
+				// 6秒后移除特效并恢复console
+				setTimeout(() => {
+					// 移除脚本
+					if (script.parentNode) {
+						script.parentNode.removeChild(script);
+					}
+
+					// 清除所有樱花元素
+					const sakuraElements = document.querySelectorAll('.sakura');
+					sakuraElements.forEach(el => {
+						if (el.parentNode) {
+							el.parentNode.removeChild(el);
+						}
+					});
+
+					// 清除所有canvas元素
+					const canvasElements = document.querySelectorAll('canvas');
+					canvasElements.forEach(canvas => {
+						if (canvas.parentNode && canvas.id !== 'defaultCanvas0') {
+							canvas.parentNode.removeChild(canvas);
+						}
+					});
+
+					// 恢复原始的console方法
+					Object.assign(console, originalConsole);
+				}, 6000);
 			} catch (error) {
 				console.error(error);
 			}
