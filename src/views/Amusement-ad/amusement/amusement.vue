@@ -1,7 +1,11 @@
 <template>
 	<div
-		style="width: 10%; margin-top: 40px; display: flex; flex-direction: column"
-	>
+		style="
+			width: 10%;
+			margin-top: 40px;
+			display: flex;
+			flex-direction: column;
+		">
 		<!-- 抽屉按钮 -->
 		<el-button
 			round
@@ -10,8 +14,7 @@
 				margin-top: 11px;
 				box-shadow: inset 0 0 50px rgb(255, 167, 167);
 			"
-			@click="drawer = true"
-		>
+			@click="drawer = true">
 			摸鱼人日历
 		</el-button>
 
@@ -20,19 +23,16 @@
 			v-model="drawer"
 			:with-header="false"
 			class="moyu"
-			@click="drawer = false"
-		>
+			@click="drawer = false">
 			<img src="https://api.vvhan.com/api/moyu" />
 		</el-drawer>
 
 		<el-card
 			class="box-card"
-			v-if="music.picUrl"
-		>
+			v-if="music.picUrl">
 			<img
 				:src="music.picUrl"
-				class="music-cover"
-			/>
+				class="music-cover" />
 			<div class="music-info">
 				<h1 class="music-title">{{ music.name }}</h1>
 				<h2 class="music-auther">{{ music.auther }}</h2>
@@ -55,7 +55,7 @@
 		picUrl: '',
 		name: '',
 		auther: '',
-		mp3url: '',
+		url: '',
 	});
 	let audio = new Audio();
 
@@ -75,7 +75,7 @@
 
 		// 格式合适则将歌曲信息赋值到 music
 		music.value = fetchedMusic;
-		audio.src = music.value.mp3url;
+		audio.src = music.value.url;
 	};
 
 	onMounted(fetchMusic);

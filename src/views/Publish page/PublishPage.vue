@@ -7,31 +7,32 @@
 			<div class="mt-4 text-sm font-bold">
 				<el-space
 					direction="vertical"
-					style="width: 100%"
-				>
+					style="width: 100%">
 					<!-- 这个div里写入一个富文本编辑器 -->
 					<el-card style="width: 97vw">
 						<div>
 							<el-input
 								v-model="input0"
-								placeholder="标题"
-							>
+								placeholder="标题">
 								<template #prepend>标题</template>
 							</el-input>
 						</div>
 					</el-card>
 					<el-card
 						class="ueditor"
-						style="width: 97vw"
-					>
+						style="width: 97vw">
 						<vue-ueditor-wrap
 							v-model="msg"
 							:config="editorConfig"
-							editor-id="editor-demo-01"
-						></vue-ueditor-wrap>
+							editor-id="editor-demo-01"></vue-ueditor-wrap>
 					</el-card>
 					<!-- <el-empty description="富文本编辑器正在开发中，敬请期待！" /> -->
-					<el-card style="width: 97vw; display: flex; justify-content: center">
+					<el-card
+						style="
+							width: 97vw;
+							display: flex;
+							justify-content: center;
+						">
 						<el-rate
 							v-model="value"
 							show-score
@@ -43,30 +44,24 @@
 						<div>
 							<el-input
 								v-model="input1"
-								placeholder="网站地址或本机文件地址"
-							>
+								placeholder="网站地址或本机文件地址">
 								<template #prepend>
 									<el-select
 										v-model="select"
 										placeholder="协议"
-										style="width: 115px"
-									>
+										style="width: 115px">
 										<el-option
 											label="Http://"
-											value="1"
-										/>
+											value="1" />
 										<el-option
 											label="https://"
-											value="2"
-										/>
+											value="2" />
 										<el-option
 											label="file://"
-											value="3"
-										/>
+											value="3" />
 										<el-option
 											label="其他（自行输入）"
-											value="4"
-										/>
+											value="4" />
 									</el-select>
 								</template>
 							</el-input>
@@ -74,16 +69,14 @@
 						<div class="mt-4">
 							<el-input
 								v-model="input3"
-								class="input-with-select"
-							>
+								class="input-with-select">
 								<template #prepend>标签</template>
 							</el-input>
 						</div>
 						<div class="mt-4">
 							<el-input
 								v-model="input2"
-								placeholder="输入备注信息"
-							>
+								placeholder="输入备注信息">
 								<template #prepend>备注</template>
 							</el-input>
 						</div>
@@ -91,8 +84,7 @@
 					<el-button
 						style="width: 97vw"
 						type="primary"
-						round
-					>
+						round>
 						发布<el-icon class="el-icon--right"><Upload /></el-icon>
 					</el-button>
 				</el-space>
