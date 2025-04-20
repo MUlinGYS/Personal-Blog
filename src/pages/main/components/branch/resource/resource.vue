@@ -29,7 +29,7 @@
 							<div class="card-header">
 								<span>{{ formatDate(resource.created_at) }} ------- {{ resource.name }}</span>
 								<div class="card-actions">
-									<el-button type="primary" link @click="openResourceUrl(resource.url)">
+									<el-button type="primary" link @click="openResourceUrl(resource.url, resource)">
 										<el-icon>
 											<Link />
 										</el-icon>
@@ -248,12 +248,6 @@ const truncateContent = (content) => {
 	return lines.slice(0, 5).join('\n') + '...';
 };
 
-// 显示资源详情
-const showResourceDetail = (resource) => {
-	currentResource.value = resource;
-	detailDialogVisible.value = true;
-};
-
 // 删除资源
 const handleDelete = (resource) => {
 	ElMessageBox.confirm(
@@ -297,8 +291,15 @@ const handleRefresh = () => {
 };
 
 // 打开资源URL
-const openResourceUrl = (url) => {
-	window.open(url, '_blank');
+const openResourceUrl = (url, resource) => {
+	// 发送请求增加阅读量,并在完成后打开链接
+	axios.post(`http://localhost:5000/api/view-count/resource/${resource.id}`)
+		.then(() => {
+			window.open(url, '_blank');
+		})
+		.catch((error) => {
+			console.error('增加阅读量失败:', error);
+		});
 };
 
 // 组件挂载时加载资源

@@ -244,9 +244,15 @@ const truncateContent = (content) => {
 };
 
 // 显示推文详情
-const showTweetDetail = (tweet) => {
-	currentTweet.value = tweet;
-	detailDialogVisible.value = true;
+const showTweetDetail = async (tweet) => {
+	try {
+		// 增加阅读量
+		await axios.post(`http://localhost:5000/api/view-count/tweet/${tweet.id}`);
+		currentTweet.value = tweet;
+		detailDialogVisible.value = true;
+	} catch (error) {
+		console.error('增加阅读量失败:', error);
+	}
 };
 
 // 删除推文

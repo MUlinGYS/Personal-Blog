@@ -254,9 +254,15 @@ const truncateContent = (content) => {
 };
 
 // 显示技术锦囊详情
-const showTipDetail = (tip) => {
-	currentTip.value = tip;
-	detailDialogVisible.value = true;
+const showTipDetail = async (tip) => {
+	try {
+		// 增加阅读量
+		await axios.post(`http://localhost:5000/api/view-count/tech_tip/${tip.id}`);
+		currentTip.value = tip;
+		detailDialogVisible.value = true;
+	} catch (error) {
+		console.error('增加阅读量失败:', error);
+	}
 };
 
 // 删除技术锦囊
