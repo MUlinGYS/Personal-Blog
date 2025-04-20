@@ -7,15 +7,12 @@
 					<h3>
 						<strong>网站统计</strong>
 					</h3>
-					<nav class="nav flex-column">
+					<nav style="display: flex;flex-direction: column">
 						<a class="nav-link active">已运行：{{ timePassed }}</a>
-						<a class="nav-link">今日访问：</a>
-						<a class="nav-link">昨日访问：</a>
 						<a class="nav-link">本月访问：</a>
 						<a class="nav-link">总访问量：</a>
+						<a class="nav-link">总篇数：</a>
 						<a class="nav-link">总字数：</a>
-						<a class="nav-link">阅读时间：</a>
-						<a class="nav-link">最后阅读时间：</a>
 					</nav>
 				</div>
 				<div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-5 mt-sm-0 text-sm-left">
@@ -23,11 +20,7 @@
 						<strong>网站项目指向</strong>
 					</h3>
 					<nav class="nav flex-column">
-						<a href="https://github.com/MUlinGYS/" class="nav-link active">GitHub</a>
-						<a class="nav-link">GitHub</a>
-						<a class="nav-link">GitHub</a>
-						<a class="nav-link">GitHub</a>
-						<a class="nav-link">GitHub</a>
+						<a href="https://github.com/MUlinGYS/Personal-Blog" class="nav-link active">GitHub</a>
 					</nav>
 				</div>
 				<div class="col-12 col-md-4 col-lg-3 text-md-left mt-5 mt-md-0">
@@ -96,7 +89,6 @@
 </template>
 
 <script>
-import '../../assets/page.min.css';
 import { ref, computed, onMounted, onUnmounted, defineComponent, h } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import img from '@/assets/img/avatar.jpeg';
@@ -177,48 +169,179 @@ body {
 
 footer {
 	font-size: 16px;
+	background-color: transparent;
+	padding: 2rem 0;
+	transition: all 0.3s ease;
 }
 
 footer a {
-	color: rgb(68, 68, 68);
+	color: #4a4a4a;
+	text-decoration: none;
+	transition: all 0.3s ease;
+	position: relative;
 }
 
 footer a:hover {
-	color: rgb(0, 86, 179);
+	color: #1890ff;
 }
 
 footer .nav-link {
-	display: block;
-	padding-top: 0.5rem;
-	padding-right: 1rem;
-	padding-bottom: 0.5rem;
-	padding-left: 0px;
-	text-decoration-line: none;
-	text-decoration-thickness: initial;
-	text-decoration-style: initial;
-	text-decoration-color: initial;
+	display: inline-block;
+	padding: 0.5rem 0rem;
+	border-radius: 4px;
+	transition: all 0.3s ease;
+}
+
+footer .nav-link:hover {
+	background-color: rgba(24, 144, 255, 0.1);
 }
 
 .fdb-block .text-h3 {
-	font-size: 0.875rem;
-	margin-bottom: 0.5em;
-	margin-top: 0.3em;
+	font-size: 1rem;
+	margin: 0;
 	font-weight: 400;
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 12px;
 }
 
 .fdb-block .text-h3 a {
-	margin-right: 12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background-color: rgba(240, 240, 240, 0.8);
+	transition: all 0.3s ease;
+	margin: 0;
+}
+
+.fdb-block .text-h3 a:hover {
+	background-color: rgba(230, 247, 255, 0.8);
+	transform: scale(1.1);
 }
 
 .text-center {
 	text-align: center;
+	color: #666;
+	font-size: 0.9rem;
 }
 
 .mt-3 {
-	margin-top: 1rem;
+	margin-top: 1.5rem;
+	padding-top: 1rem;
+	border-top: 1px solid rgba(238, 238, 238, 0.5);
 }
 
 h3 {
-	font-size: 18px;
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #333;
+	margin-bottom: 1.2rem;
+	position: relative;
+	padding-bottom: 0.5rem;
+}
+
+h3::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 40px;
+	height: 3px;
+	background-color: #1890ff;
+	border-radius: 2px;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 1rem;
+}
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0 -1rem;
+	align-items: flex-start;
+}
+
+/* 列布局 */
+.col-12 {
+	flex: 0 0 100%;
+	max-width: 100%;
+	padding: 0 1rem;
+}
+
+.col-sm-6 {
+	flex: 0 0 50%;
+	max-width: 50%;
+}
+
+.col-md-4 {
+	flex: 0 0 33.333333%;
+	max-width: 33.333333%;
+}
+
+.col-lg-3 {
+	flex: 0 0 25%;
+	max-width: 25%;
+}
+
+.col-lg-2 {
+	flex: 0 0 16.666667%;
+	max-width: 16.666667%;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+	footer {
+		padding: 1.5rem 0;
+	}
+
+	.col-sm-6,
+	.col-md-4,
+	.col-lg-3,
+	.col-lg-2 {
+		flex: 0 0 100%;
+		max-width: 100%;
+		margin-bottom: 1.5rem;
+	}
+
+	.fdb-block .text-h3 {
+		justify-content: center;
+	}
+}
+
+/* 对齐方式 */
+.text-sm-left {
+	text-align: left;
+}
+
+.text-md-left {
+	text-align: left;
+}
+
+.text-lg-left {
+	text-align: left;
+}
+
+.ml-auto {
+	margin-left: auto;
+}
+
+/* 间距调整 */
+.mt-4 {
+	margin-top: 1.5rem;
+}
+
+.mt-md-0 {
+	margin-top: 0;
+}
+
+.mt-lg-0 {
+	margin-top: 0;
 }
 </style>
