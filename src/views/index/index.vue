@@ -40,10 +40,18 @@ export default defineComponent({
 
 		onMounted(async () => {
 			try {
+				// 获取背景图片
 				const res = await axios.get(
 					'https://api.vvhan.com/api/wallpaper/pcGirl?type=json'
 				);
 				bgImage.value = res.data.url;
+
+				// 增加网站访问量
+				try {
+					await axios.post('http://localhost:5000/api/view-count/website/1');
+				} catch (error) {
+					console.error('增加访问量失败:', error);
+				}
 
 				// 添加樱花特效
 				const script = document.createElement('script');

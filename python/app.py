@@ -348,18 +348,45 @@ def delete_tech_tip(tip_id):
 @app.route('/api/statistics', methods=['GET'])
 def get_statistics():
     try:
+        # 获取文章数量
         tweet_count = Tweet.query.count()
         resource_count = Resource.query.count()
         tech_tip_count = TechTip.query.count()
+        total_articles = tweet_count + resource_count + tech_tip_count
         
-        # 计算总阅读量
-        total_views = db.session.query(db.func.sum(ViewCount.view_count)).scalar() or 0
+        # 计算总访问量（网站访问）
+        total_views = ViewCount.query.filter_by(content_type='website').with_entities(db.func.sum(ViewCount.view_count)).scalar() or 0
+        
+        # 计算总阅读量（文章阅读）
+        total_reads = ViewCount.query.filter(ViewCount.content_type != 'website').with_entities(db.func.sum(ViewCount.view_count)).scalar() or 0
+        
+        # 计算本月访问量
+        start_of_month = datetime.datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        monthly_views = ViewCount.query.filter(
+            ViewCount.content_type == 'website',
+            ViewCount.created_at >= start_of_month
+        ).with_entities(db.func.sum(ViewCount.view_count)).scalar() or 0
+        
+        # 计算总字数
+        total_words = 0
+        # 统计推文字数
+        tweets = Tweet.query.all()
+        for tweet in tweets:
+            total_words += len(tweet.content)
+        # 统计技术锦囊字数
+        tech_tips = TechTip.query.all()
+        for tip in tech_tips:
+            total_words += len(tip.content)
         
         return jsonify({
-            'tweet_count': tweet_count,
-            'resource_count': resource_count,
-            'tech_tip_count': tech_tip_count,
-            'read_count': total_views
+            'tweet_count': tweet_count,      # 推文数量
+            'resource_count': resource_count, # 资源数量
+            'tech_tip_count': tech_tip_count, # 技术锦囊数量
+            'monthly_views': monthly_views,   # 本月访问量
+            'total_views': total_views,       # 总访问量
+            'total_reads': total_reads,       # 总阅读量
+            'total_articles': total_articles, # 总文章数
+            'total_words': total_words        # 总字数
         })
     except Exception as e:
         print(f"Error in get_statistics: {str(e)}")

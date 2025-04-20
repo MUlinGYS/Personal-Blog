@@ -9,10 +9,11 @@
 					</h3>
 					<nav style="display: flex;flex-direction: column">
 						<a class="nav-link active">已运行：{{ timePassed }}</a>
-						<a class="nav-link">本月访问：</a>
-						<a class="nav-link">总访问量：</a>
-						<a class="nav-link">总篇数：</a>
-						<a class="nav-link">总字数：</a>
+						<a class="nav-link">本月访问：{{ statistics.monthly_views }}</a>
+						<a class="nav-link">总访问量：{{ statistics.total_views }}</a>
+						<a class="nav-link">总阅读量：{{ statistics.total_reads }}</a>
+						<a class="nav-link">总篇数：{{ statistics.total_articles }}</a>
+						<a class="nav-link">总字数：{{ statistics.total_words }}</a>
 					</nav>
 				</div>
 				<div class="col-12 col-sm-6 col-md-4 col-lg-3 mt-5 mt-sm-0 text-sm-left">
@@ -81,12 +82,23 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, defineComponent, h } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import axios from 'axios';
 
 export default defineComponent({
 	name: 'Footer',
 	setup() {
 		const startDateTime = new Date('2024-02-20T00:00:00Z');
 		const startTime = ref(startDateTime.getTime());
+		const statistics = ref({
+			monthly_views: 0,
+			total_views: 0,
+			total_reads: 0,
+			total_articles: 0,
+			total_words: 0,
+			tweet_count: 0,
+			resource_count: 0,
+			tech_tip_count: 0
+		});
 
 		const timePassed = computed(() => {
 			const diffInSeconds = Math.floor(
@@ -103,6 +115,12 @@ export default defineComponent({
 			intervalId = setInterval(() => {
 				startTime.value = startDateTime.getTime();
 			}, 1000);
+
+			// 获取统计数据
+			fetchStatistics();
+
+			// 增加网站访问量
+			incrementViewCount();
 		});
 
 		onUnmounted(() => {
@@ -110,6 +128,38 @@ export default defineComponent({
 				clearInterval(intervalId);
 			}
 		});
+
+		// 获取统计数据
+		const fetchStatistics = async () => {
+			try {
+				const response = await axios.get('http://localhost:5000/api/statistics');
+				// 将后端返回的数据映射到前端需要的格式
+				statistics.value = {
+					monthly_views: response.data.monthly_views || 0,
+					total_views: response.data.total_views || 0,
+					total_reads: response.data.total_reads || 0,
+					total_articles: response.data.total_articles || 0,
+					total_words: response.data.total_words || 0,
+					tweet_count: response.data.tweet_count || 0,
+					resource_count: response.data.resource_count || 0,
+					tech_tip_count: response.data.tech_tip_count || 0
+				};
+				console.log('获取到的统计数据:', statistics.value);
+			} catch (error) {
+				console.error('获取统计数据失败:', error);
+			}
+		};
+
+		// 增加访问量
+		const incrementViewCount = async () => {
+			try {
+				await axios.post('http://localhost:5000/api/view-count/website/1');
+				// 增加访问量后重新获取统计数据
+				await fetchStatistics();
+			} catch (error) {
+				console.error('增加访问量失败:', error);
+			}
+		};
 
 		const open = () => {
 			ElMessage({
@@ -131,6 +181,7 @@ export default defineComponent({
 
 		return {
 			timePassed,
+			statistics,
 			open,
 			openVn
 		};

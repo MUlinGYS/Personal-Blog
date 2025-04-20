@@ -33,7 +33,7 @@
 				</el-statistic>
 			</el-col>
 			<el-col :span="6">
-				<el-statistic title="阅读量统计" :value="statistics.read_count || 0">
+				<el-statistic title="阅读量统计" :value="statistics.total_reads || 0">
 					<template #suffix>
 						<el-icon style="vertical-align: -0.125em">
 							<ChatLineRound />
@@ -103,7 +103,11 @@ const statistics = ref({
 	tweet_count: 0,
 	resource_count: 0,
 	tech_tip_count: 0,
-	read_count: 0
+	total_reads: 0,
+	total_views: 0,
+	monthly_views: 0,
+	total_articles: 0,
+	total_words: 0
 });
 
 // 提交记录
