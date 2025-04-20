@@ -9,11 +9,11 @@ const __dirname = dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',  // 添加这一行
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src')  // 将 '@' 的别名设置为 'src/' 
+    base: './',  // 添加这一行
+    plugins: [vue()],
+    resolve: {
+        alias: {
+        '@': resolve(__dirname, 'src')  // 将 '@' 的别名设置为 'src/' 
+        }
     }
-  }
-})
+}) 

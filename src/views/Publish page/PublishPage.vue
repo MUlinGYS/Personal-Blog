@@ -93,7 +93,7 @@
 	</el-card>
 </template>
 
-<script setup lang="ts">
+<script setup>
 	// 导入vue-router
 	import { useRouter } from 'vue-router';
 

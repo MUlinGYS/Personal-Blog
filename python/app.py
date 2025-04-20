@@ -3,6 +3,7 @@ from flask_cors import CORS
 from models import db, User, Tweet, Resource, TechTip, Archive
 from config import Config
 import datetime
+import secrets  # 添加token
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -28,7 +29,13 @@ def login():
     
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
-        return jsonify({'success': True, 'message': '登录成功'})
+        # 生成随机token
+        token = secrets.token_hex(16)  # 生成32位的随机token
+        return jsonify({
+            'success': True, 
+            'message': '登录成功',
+            'token': token  # 返回token
+        })
     return jsonify({'success': False, 'message': '用户名或密码错误'}), 401
 
 # 修改账号接口

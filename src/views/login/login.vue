@@ -7,15 +7,45 @@
 			</div>
 			<div id="right_card">
 				<el-card class="el-card">
-					<h2>欢迎登录</h2>
-					<form @submit.prevent="handleLogin" class="login">
-						<input type="text" placeholder="请输入账号demo" autocomplete="username" v-model="account" />
-						<input type="password" placeholder="请输入密码demo" autocomplete="current-password"
-							v-model="password" />
+					<h2>
+						{{ isLogin ? "欢迎登录" : isCreate ? "新建账号" : "修改账号" }}
+					</h2>
+					<!-- 登录表单 -->
+					<form v-if="isLogin" @submit.prevent="handleLogin" class="login">
+						<input type="text" placeholder="请输入账号" autocomplete="username" v-model="account" />
+						<input type="password" placeholder="请输入密码" autocomplete="current-password" v-model="password" />
 						<div id="btn" style="margin-top: 20px">
-							<button type="submit" class="loginbtn">
-								登陆
-							</button>
+							<button type="submit" class="loginbtn">登录</button>
+						</div>
+						<div class="action-links">
+							<a @click="switchToCreate">新建账号</a>
+							<a @click="switchToUpdate">修改账号</a>
+						</div>
+					</form>
+
+					<!-- 新建账号表单 -->
+					<form v-if="isCreate" @submit.prevent="handleCreate" class="login">
+						<input type="text" placeholder="请输入新账号" v-model="createAccount" />
+						<input type="password" placeholder="请输入新密码" v-model="createPassword" />
+						<div id="btn" style="margin-top: 20px">
+							<button type="submit" class="loginbtn">创建账号</button>
+						</div>
+						<div class="action-links">
+							<a @click="switchToLogin">返回登录</a>
+						</div>
+					</form>
+
+					<!-- 修改账号表单 -->
+					<form v-if="isUpdate" @submit.prevent="handleUpdate" class="login">
+						<input type="text" placeholder="请输入原账号" v-model="oldAccount" />
+						<input type="password" placeholder="请输入原密码" v-model="oldPassword" />
+						<input type="text" placeholder="请输入新账号" v-model="newAccount" />
+						<input type="password" placeholder="请输入新密码" v-model="newPassword" />
+						<div id="btn" style="margin-top: 20px">
+							<button type="submit" class="loginbtn">修改账号</button>
+						</div>
+						<div class="action-links">
+							<a @click="switchToLogin">返回登录</a>
 						</div>
 					</form>
 				</el-card>
@@ -24,75 +54,135 @@
 	</div>
 </template>
 
-<script lang="ts" setup name="appLogin">
-import { ref, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
-// import { getUsers } from './../../api/detailed.js'; //db.json文件为本地接口
-import Cookies from 'js-cookie';
-import { h } from 'vue';
-import { ElNotification } from 'element-plus';
+<script setup>
+import { ref, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import Cookies from "js-cookie";
+import { h } from "vue";
+import { ElNotification } from "element-plus";
+import request from "@/utils/request";
 
-const account = ref('');
-const password = ref('');
+const account = ref("");
+const password = ref("");
+const createAccount = ref("");
+const createPassword = ref("");
+const oldAccount = ref("");
+const oldPassword = ref("");
+const newAccount = ref("");
+const newPassword = ref("");
 const router = useRouter();
 const isMobile = ref(false);
+
+// 表单状态
+const isLogin = ref(true);
+const isCreate = ref(false);
+const isUpdate = ref(false);
 
 function updateMobileView() {
 	isMobile.value = window.innerWidth <= 768;
 }
 
 updateMobileView();
-window.addEventListener('resize', updateMobileView);
+window.addEventListener("resize", updateMobileView);
 
 onUnmounted(() => {
-	window.removeEventListener('resize', updateMobileView);
+	window.removeEventListener("resize", updateMobileView);
 });
 
-const open1 = () => {
+const openNotification = (title, message, type = "error") => {
 	ElNotification({
-		title: '警告',
-		message: h('i', { style: 'color: teal' }, '密码或账户错误'),
+		title,
+		message: h("i", { style: "color: teal" }, message),
+		type,
 	});
 };
 
-//---------------------登录接口（使用本地db.json文件）-------------------------
-// const handleLogin = async () => {
-// 	try {
-// 		const response = await getUsers();
+// 切换表单状态
+const switchToLogin = () => {
+	isLogin.value = true;
+	isCreate.value = false;
+	isUpdate.value = false;
+};
 
-// 		// 从相应数据中获取用户数组
-// 		// @ts-ignore
-// 		const users = response.data.account;
+const switchToCreate = () => {
+	isLogin.value = false;
+	isCreate.value = true;
+	isUpdate.value = false;
+};
 
-// 		const user = users.find(
-// 			(user: { account: string; password: string }) =>
-// 				user.account === account.value && user.password === password.value
-// 		);
+const switchToUpdate = () => {
+	isLogin.value = false;
+	isCreate.value = false;
+	isUpdate.value = true;
+};
 
-// 		if (user) {
-// 			const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
-// 			console.log('生成的 token：', token);
-// 			Cookies.set('token', token); // 将生成的 token 存入 cookie
-// 			router.push('/index');
-// 		} else {
-// 			// 否则，提示用户账号或密码错误
-// 			open1();
-// 		}
-// 	} catch (error) {
-// 		console.error(error);
-// 	}
-// };
+// 处理登录
+const handleLogin = async () => {
+	try {
+		const res = await request.post("/login", {
+			username: account.value,
+			password: password.value,
+		});
+		if (res.success) {
+			const token = res.token;
+			Cookies.set("token", token);
+			openNotification("成功", "登录成功", "success");
+			router.push("/index");
+		} else {
+			openNotification("警告", res.message);
+		}
+	} catch (error) {
+		if (error.response?.message) {
+			openNotification("错误", error.response.message);
+		} else {
+			openNotification("错误", "登录失败，请检查网络连接");
+		}
+	}
+};
 
-//本地定死数据登录
-const handleLogin = () => {
-	if (account.value === 'demo' && password.value === 'demo') {
-		const token = Math.random().toString(36).substring(2, 18); // 生成一个随机 token，长度为16
-		console.log('生成的 token：', token);
-		Cookies.set('token', token); // 将生成的 token 存入 cookie
-		router.push('/index');
-	} else {
-		// 否则，提示用户账号或密码错误
-		open1();
+// 处理新建账号
+const handleCreate = async () => {
+	try {
+		const res = await request.post("/user", {
+			username: createAccount.value,
+			password: createPassword.value,
+		});
+		if (res.success) {
+			openNotification("成功", "账号创建成功", "success");
+			switchToLogin();
+		} else {
+			openNotification("警告", res.message);
+		}
+	} catch (error) {
+		if (error.response?.data?.message) {
+			openNotification("错误", error.response.message);
+		} else {
+			openNotification("错误", "创建账号失败，请检查网络连接");
+		}
+	}
+};
+
+// 处理修改账号
+const handleUpdate = async () => {
+	try {
+		const res = await request.put("/user", {
+			old_username: oldAccount.value,
+			old_password: oldPassword.value,
+			new_username: newAccount.value,
+			new_password: newPassword.value,
+		});
+		if (res.success) {
+			openNotification("成功", "账号修改成功", "success");
+			switchToLogin();
+		} else {
+			openNotification("警告", res.message);
+		}
+	} catch (error) {
+		if (error.response?.data?.message) {
+			openNotification("错误", error.response.message);
+		} else {
+			openNotification("错误", "修改账号失败，请检查网络连接");
+		}
 	}
 };
 </script>
@@ -113,7 +203,7 @@ const handleLogin = () => {
 	width: 100vw;
 	height: 100vh;
 	overflow: auto;
-	background-image: url('/src/assets/gif/login.gif');
+	background-image: url("/src/assets/gif/login.gif");
 	background-size: 100% 100%;
 	background-color: #a7a8bd;
 
@@ -192,6 +282,27 @@ const handleLogin = () => {
 		margin-top: 10px;
 		border-radius: 10px;
 		background-color: rgba(207, 38, 38, 0.8);
+		color: white;
+		border: none;
+		cursor: pointer;
+	}
+
+	.action-links {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 15px;
+		padding: 0 20px;
+
+		a {
+			color: white;
+			text-decoration: none;
+			cursor: pointer;
+			font-size: 14px;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
 	}
 }
 </style>
