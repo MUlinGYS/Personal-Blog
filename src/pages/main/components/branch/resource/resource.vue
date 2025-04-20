@@ -100,6 +100,7 @@ import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search, Refresh, Link } from '@element-plus/icons-vue';
 import axios from 'axios';
+import request from '@/utils/request'; // 导入request实例
 
 // 搜索查询
 const searchQuery = ref('');
@@ -147,7 +148,7 @@ const loadResources = async () => {
 			currentPage.value = 1;
 		}
 
-		const response = await axios.get('http://localhost:5000/api/resources', { params });
+		const response = await request.get('/resources', { params });
 		const { items, total, pages } = response.data;
 
 		// 如果搜索模式下，直接替换数据
@@ -211,14 +212,14 @@ const openResourceDialog = (resource = null) => {
 const handleSubmit = async () => {
 	try {
 		if (isEdit.value) {
-			await axios.put(`http://localhost:5000/api/resources/${resourceData.value.id}`, {
+			await request.put(`/resources/${resourceData.value.id}`, {
 				name: resourceData.value.name,
 				url: resourceData.value.url,
 				note: resourceData.value.note
 			});
 			ElMessage.success('修改资源成功');
 		} else {
-			await axios.post('http://localhost:5000/api/resources', {
+			await request.post('/resources', {
 				name: resourceData.value.name,
 				url: resourceData.value.url,
 				note: resourceData.value.note
@@ -260,7 +261,7 @@ const handleDelete = (resource) => {
 		}
 	).then(async () => {
 		try {
-			await axios.delete(`http://localhost:5000/api/resources/${resource.id}`);
+			await request.delete(`/resources/${resource.id}`);
 			ElMessage.success('删除资源成功');
 			// 重新加载资源列表
 			currentPage.value = 1;
@@ -293,7 +294,7 @@ const handleRefresh = () => {
 // 打开资源URL
 const openResourceUrl = (url, resource) => {
 	// 发送请求增加阅读量,并在完成后打开链接
-	axios.post(`http://localhost:5000/api/view-count/resource/${resource.id}`)
+	request.post(`/view-count/resource/${resource.id}`)
 		.then(() => {
 			window.open(url, '_blank');
 		})

@@ -95,6 +95,7 @@ import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import axios from 'axios';
+import request from '@/utils/request'; // 导入request实例
 
 // 搜索查询
 const searchQuery = ref('');
@@ -142,7 +143,7 @@ const loadTweets = async () => {
 			currentPage.value = 1;
 		}
 
-		const response = await axios.get('http://localhost:5000/api/tweets', { params });
+		const response = await request.get('/tweets', { params });
 		const { items, total, pages } = response.data;
 
 		// 如果搜索模式下，直接替换数据
@@ -206,14 +207,14 @@ const openTweetDialog = (tweet = null) => {
 const handleSubmit = async () => {
 	try {
 		if (isEdit.value) {
-			await axios.put(`http://localhost:5000/api/tweets/${tweetData.value.id}`, {
+			await request.put(`/tweets/${tweetData.value.id}`, {
 				title: tweetData.value.title,
 				content: tweetData.value.content,
 				note: tweetData.value.note
 			});
 			ElMessage.success('修改推文成功');
 		} else {
-			await axios.post('http://localhost:5000/api/tweets', {
+			await request.post('/tweets', {
 				title: tweetData.value.title,
 				content: tweetData.value.content,
 				note: tweetData.value.note
@@ -247,7 +248,7 @@ const truncateContent = (content) => {
 const showTweetDetail = async (tweet) => {
 	try {
 		// 增加阅读量
-		await axios.post(`http://localhost:5000/api/view-count/tweet/${tweet.id}`);
+		await request.post(`/view-count/tweet/${tweet.id}`);
 		currentTweet.value = tweet;
 		detailDialogVisible.value = true;
 	} catch (error) {
@@ -267,7 +268,7 @@ const handleDelete = (tweet) => {
 		}
 	).then(async () => {
 		try {
-			await axios.delete(`http://localhost:5000/api/tweets/${tweet.id}`);
+			await request.delete(`/tweets/${tweet.id}`);
 			ElMessage.success('删除推文成功');
 			// 重新加载推文列表
 			currentPage.value = 1;

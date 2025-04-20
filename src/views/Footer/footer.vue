@@ -82,7 +82,7 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, defineComponent, h } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import axios from 'axios';
+import request from '@/utils/request';
 
 export default defineComponent({
 	name: 'Footer',
@@ -132,7 +132,7 @@ export default defineComponent({
 		// 获取统计数据
 		const fetchStatistics = async () => {
 			try {
-				const response = await axios.get('http://localhost:5000/api/statistics');
+				const response = await request.get('/statistics');
 				// 将后端返回的数据映射到前端需要的格式
 				statistics.value = {
 					monthly_views: response.data.monthly_views || 0,
@@ -153,7 +153,7 @@ export default defineComponent({
 		// 增加访问量
 		const incrementViewCount = async () => {
 			try {
-				await axios.post('http://localhost:5000/api/view-count/website/1');
+				await request.post('/view-count/website/1');
 				// 增加访问量后重新获取统计数据
 				await fetchStatistics();
 			} catch (error) {

@@ -96,6 +96,7 @@ import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Search, Refresh } from '@element-plus/icons-vue';
 import axios from 'axios';
+import request from '@/utils/request'; // 导入request实例
 
 // 搜索查询
 const searchQuery = ref('');
@@ -149,7 +150,7 @@ const loadTips = async () => {
 			params.search = searchQuery.value;
 		}
 
-		const response = await axios.get('http://localhost:5000/api/tech-tips', { params });
+		const response = await request.get('/tech-tips', { params });
 		const { items, total, pages } = response.data;
 
 		// 如果搜索模式下，直接替换数据
@@ -216,14 +217,14 @@ const openTipDialog = (tip = null) => {
 const handleSubmit = async () => {
 	try {
 		if (isEdit.value) {
-			await axios.put(`http://localhost:5000/api/tech-tips/${tipData.value.id}`, {
+			await request.put(`/tech-tips/${tipData.value.id}`, {
 				name: tipData.value.name,
 				content: tipData.value.content,
 				note: tipData.value.note
 			});
 			ElMessage.success('修改技术锦囊成功');
 		} else {
-			await axios.post('http://localhost:5000/api/tech-tips', {
+			await request.post('/tech-tips', {
 				name: tipData.value.name,
 				content: tipData.value.content,
 				note: tipData.value.note
@@ -257,7 +258,7 @@ const truncateContent = (content) => {
 const showTipDetail = async (tip) => {
 	try {
 		// 增加阅读量
-		await axios.post(`http://localhost:5000/api/view-count/tech_tip/${tip.id}`);
+		await request.post(`/view-count/tech_tip/${tip.id}`);
 		currentTip.value = tip;
 		detailDialogVisible.value = true;
 	} catch (error) {
@@ -277,7 +278,7 @@ const handleDeleteTip = (tip) => {
 		}
 	).then(async () => {
 		try {
-			await axios.delete(`http://localhost:5000/api/tech-tips/${tip.id}`);
+			await request.delete(`/tech-tips/${tip.id}`);
 			ElMessage.success('删除技术锦囊成功');
 			// 重新加载技术锦囊列表
 			currentPage.value = 1;

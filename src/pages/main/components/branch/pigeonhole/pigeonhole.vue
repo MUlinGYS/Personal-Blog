@@ -95,6 +95,7 @@ import { Document, Link, Collection, ChatLineRound, InfoFilled, Refresh } from '
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import request from '@/utils/request'; // 导入request实例
 
 const router = useRouter();
 
@@ -121,7 +122,7 @@ const refreshing = ref(false);
 // 获取统计数据
 const fetchStatistics = async () => {
 	try {
-		const response = await axios.get('http://localhost:5000/api/statistics');
+		const response = await request.get('/statistics');
 		statistics.value = response.data;
 	} catch (error) {
 		ElMessage.error('获取统计数据失败');
@@ -132,7 +133,7 @@ const fetchStatistics = async () => {
 // 获取提交记录
 const fetchSubmissions = async () => {
 	try {
-		const response = await axios.get('http://localhost:5000/api/submissions', {
+		const response = await request.get('/submissions', {
 			params: { limit: 6 }
 		});
 		submissions.value = response.data;
@@ -263,14 +264,7 @@ const handleCardClick = (type) => {
 	}
 };
 
-// 在 script setup 部分添加
-const incrementViewCount = async (contentType, contentId) => {
-	try {
-		await axios.post(`/api/view-count/${contentType}/${contentId}`);
-	} catch (error) {
-		console.error('Error incrementing view count:', error);
-	}
-};
+
 
 // 组件挂载时获取数据
 onMounted(() => {
