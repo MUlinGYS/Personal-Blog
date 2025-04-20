@@ -791,7 +791,6 @@ parse-node-version@^1.0.1:
     personal-blog "file:"
     vue "^3.3.11"
     vue-router "^4.0.13"
-    vue-ueditor-wrap "3.x"
     vue3-cookies "^1.0.6"
     vuex "^4.0.2"
 
@@ -976,12 +975,6 @@ vue-router@^4.0.13:
   dependencies:
     "@vue/devtools-api" "^6.5.1"
 
-vue-ueditor-wrap@3.x:
-  version "3.0.8"
-  resolved "https://registry.npmmirror.com/vue-ueditor-wrap/-/vue-ueditor-wrap-3.0.8.tgz"
-  integrity sha512-U1s30pKcz8rr6v2F2ivnomOf1vF1N+n+aNClas4jXfiEf4E5FEtNwkFJBugcyf2VTRFK0UVpx5WspX5nwmImYw==
-  dependencies:
-    "@babel/runtime" "7.x"
 
 vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.11, vue@3.4.21:
   version "3.4.21"

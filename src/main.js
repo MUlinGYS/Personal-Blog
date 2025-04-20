@@ -5,7 +5,6 @@ import ElementPlus from 'element-plus'
 import store from './store';
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import VueUeditorWrap from 'vue-ueditor-wrap';// 富文本编辑器ueditor
 // import './api/mock' //mockjs模拟后端数据//暂时弃用
 
 
@@ -19,5 +18,4 @@ app
   .use(store)     // 使用 Vuex 状态管理
   .use(router)   // 使用路由实例
   .use(ElementPlus)  // 使用 Element Plus
-  .use(VueUeditorWrap) // 富文本编辑器
   .mount('#app')   // 应用挂载点

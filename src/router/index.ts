@@ -21,13 +21,6 @@ const routes: Array<RouteRecordRaw> = [
             }
         ],
     },
-    {
-        name: 'publishpage',
-        path: '/publishpage',
-        meta: { requiresAuth: true }, 
-        component: () => import('../views/Publish page/PublishPage.vue'),
-    },
-    
 ]
 
 const router = createRouter({
