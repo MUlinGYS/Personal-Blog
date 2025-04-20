@@ -204,22 +204,6 @@ def get_resources():
         print(f"Error in get_resources: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/resources/<int:resource_id>', methods=['GET'])
-def get_resource(resource_id):
-    try:
-        resource = Resource.query.get_or_404(resource_id)
-        return jsonify({
-            'id': resource.id,
-            'name': resource.name,
-            'url': resource.url,
-            'note': resource.note,
-            'created_at': resource.created_at.isoformat() if resource.created_at else None,
-            'updated_at': resource.updated_at.isoformat() if resource.updated_at else None
-        })
-    except Exception as e:
-        print(f"Error in get_resource: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
 @app.route('/api/resources/<int:resource_id>', methods=['PUT'])
 def update_resource(resource_id):
     try:
@@ -360,47 +344,6 @@ def delete_tech_tip(tip_id):
         print(f"Error in delete_tech_tip: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-# 归档接口
-@app.route('/api/archives', methods=['POST'])
-def create_archive():
-    data = request.get_json()
-    archive = Archive(name=data['name'])
-    db.session.add(archive)
-    db.session.commit()
-    
-    # 添加推文到归档
-    if 'tweet_ids' in data:
-        tweets = Tweet.query.filter(Tweet.id.in_(data['tweet_ids'])).all()
-        for tweet in tweets:
-            tweet.archive_id = archive.id
-    
-    # 添加资源链接到归档
-    if 'resource_ids' in data:
-        resources = Resource.query.filter(Resource.id.in_(data['resource_ids'])).all()
-        for resource in resources:
-            resource.archive_id = archive.id
-    
-    # 添加技术锦囊到归档
-    if 'tech_tip_ids' in data:
-        tech_tips = TechTip.query.filter(TechTip.id.in_(data['tech_tip_ids'])).all()
-        for tech_tip in tech_tips:
-            tech_tip.archive_id = archive.id
-    
-    db.session.commit()
-    return jsonify({'success': True, 'message': '归档创建成功'})
-
-@app.route('/api/archives', methods=['GET'])
-def get_archives():
-    archives = Archive.query.all()
-    return jsonify([{
-        'id': a.id,
-        'name': a.name,
-        'created_at': a.created_at,
-        'tweets': [{'id': t.id, 'title': t.title} for t in a.tweets],
-        'resources': [{'id': r.id, 'name': r.name} for r in a.resources],
-        'tech_tips': [{'id': t.id, 'name': t.name} for t in a.tech_tips]
-    } for a in archives])
-
 # 统计接口
 @app.route('/api/statistics', methods=['GET'])
 def get_statistics():
@@ -456,8 +399,8 @@ def increment_view_count(content_type, content_id):
 def get_submissions():
     try:
         # 获取最近的提交记录，包括推文、资源和技术锦囊
-        # 按创建时间倒序排序，限制返回数量
-        limit = int(request.args.get('limit', 10))
+        # 按创建时间倒序排序，限制返回数
+        limit = int(request.args.get('limit', 6))  # 默认限制为6条
         
         # 获取最近的推文
         recent_tweets = Tweet.query.order_by(Tweet.created_at.desc()).limit(limit).all()
