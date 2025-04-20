@@ -65,7 +65,7 @@ export default defineComponent({
 
 				document.body.appendChild(script);
 
-				// 6秒后移除特效并恢复console
+				// 10秒后移除特效并恢复console
 				setTimeout(() => {
 					// 移除脚本
 					if (script.parentNode) {
@@ -90,7 +90,7 @@ export default defineComponent({
 
 					// 恢复原始的console方法
 					Object.assign(console, originalConsole);
-				}, 6000);
+				}, 10000);
 			} catch (error) {
 				console.error(error);
 			}
