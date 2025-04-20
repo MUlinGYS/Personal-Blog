@@ -1,4 +1,5 @@
 <template>
+	<!-- 娱乐位 -->
 	<div style="
 			width: 10%;
 			margin-top: 40px;
@@ -6,13 +7,13 @@
 			flex-direction: column;
 		">
 		<!-- 抽屉按钮 -->
-		<el-button round style="
+		<!-- <el-button round style="
 				background-color: transparent;
 				margin-top: 11px;
 				box-shadow: inset 0 0 50px rgb(255, 167, 167);
 			" @click="drawer = true">
 			摸鱼人日历
-		</el-button>
+		</el-button> -->
 
 		<!-- 抽屉 -->
 		<el-drawer v-model="drawer" :with-header="false" class="moyu" @click="drawer = false"
