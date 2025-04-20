@@ -21,7 +21,7 @@
 <script>
 import { computed, ref, onMounted, defineComponent } from 'vue';
 import { useStore } from 'vuex';
-import axios from 'axios';
+import request from '@/utils/request';
 import Header from '@/components/Header.vue';
 import Footer from '../Footer/footer.vue';
 import Tool from '../Amusement-ad/ad/tool.vue';
@@ -41,17 +41,8 @@ export default defineComponent({
 		onMounted(async () => {
 			try {
 				// 获取背景图片
-				const res = await axios.get(
-					'https://api.vvhan.com/api/wallpaper/pcGirl?type=json'
-				);
+				const res = await request.get('https://api.vvhan.com/api/wallpaper/pcGirl?type=json');
 				bgImage.value = res.data.url;
-
-				// 增加网站访问量
-				try {
-					await axios.post('http://localhost:5000/api/view-count/website/1');
-				} catch (error) {
-					console.error('增加访问量失败:', error);
-				}
 
 				// 添加樱花特效
 				const script = document.createElement('script');
