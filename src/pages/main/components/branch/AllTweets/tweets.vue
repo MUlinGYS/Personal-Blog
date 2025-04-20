@@ -476,6 +476,7 @@ onMounted(() => {
 	text-overflow: ellipsis;
 	display: -webkit-box;
 	-webkit-line-clamp: 5;
+	line-clamp: 5;
 	-webkit-box-orient: vertical;
 	background-color: transparent;
 	backdrop-filter: blur(4px);
