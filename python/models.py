@@ -48,4 +48,14 @@ class Archive(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     tweets = db.relationship('Tweet', backref='archive', lazy=True)
     resources = db.relationship('Resource', backref='archive', lazy=True)
-    tech_tips = db.relationship('TechTip', backref='archive', lazy=True) 
+    tech_tips = db.relationship('TechTip', backref='archive', lazy=True)
+
+class ViewCount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content_type = db.Column(db.String(20), nullable=False)  # 'tweet', 'resource', 'tech_tip'
+    content_id = db.Column(db.Integer, nullable=False)
+    view_count = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+    __table_args__ = (db.UniqueConstraint('content_type', 'content_id', name='uix_content'),) 

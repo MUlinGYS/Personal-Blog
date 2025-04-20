@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from models import db, User, Tweet, Resource, TechTip, Archive
+from models import db, User, Tweet, Resource, TechTip, Archive, ViewCount
 from config import Config
 import datetime
 import secrets  # 添加token
@@ -400,6 +400,106 @@ def get_archives():
         'resources': [{'id': r.id, 'name': r.name} for r in a.resources],
         'tech_tips': [{'id': t.id, 'name': t.name} for t in a.tech_tips]
     } for a in archives])
+
+# 统计接口
+@app.route('/api/statistics', methods=['GET'])
+def get_statistics():
+    try:
+        tweet_count = Tweet.query.count()
+        resource_count = Resource.query.count()
+        tech_tip_count = TechTip.query.count()
+        
+        # 计算总阅读量
+        total_views = db.session.query(db.func.sum(ViewCount.view_count)).scalar() or 0
+        
+        return jsonify({
+            'tweet_count': tweet_count,
+            'resource_count': resource_count,
+            'tech_tip_count': tech_tip_count,
+            'read_count': total_views
+        })
+    except Exception as e:
+        print(f"Error in get_statistics: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/view-count/<content_type>/<int:content_id>', methods=['POST'])
+def increment_view_count(content_type, content_id):
+    try:
+        # 查找或创建阅读量记录
+        view_count = ViewCount.query.filter_by(
+            content_type=content_type,
+            content_id=content_id
+        ).first()
+        
+        if not view_count:
+            view_count = ViewCount(
+                content_type=content_type,
+                content_id=content_id,
+                view_count=0
+            )
+            db.session.add(view_count)
+        
+        # 增加阅读量
+        view_count.view_count += 1
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'view_count': view_count.view_count
+        })
+    except Exception as e:
+        print(f"Error in increment_view_count: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# 获取提交记录接口
+@app.route('/api/submissions', methods=['GET'])
+def get_submissions():
+    try:
+        # 获取最近的提交记录，包括推文、资源和技术锦囊
+        # 按创建时间倒序排序，限制返回数量
+        limit = int(request.args.get('limit', 10))
+        
+        # 获取最近的推文
+        recent_tweets = Tweet.query.order_by(Tweet.created_at.desc()).limit(limit).all()
+        tweet_submissions = [{
+            'id': t.id,
+            'type': 'tweet',
+            'title': t.title,
+            'content': t.content[:100] + '...' if len(t.content) > 100 else t.content,
+            'note': t.note,
+            'created_at': t.created_at.isoformat() if t.created_at else None
+        } for t in recent_tweets]
+        
+        # 获取最近的资源
+        recent_resources = Resource.query.order_by(Resource.created_at.desc()).limit(limit).all()
+        resource_submissions = [{
+            'id': r.id,
+            'type': 'resource',
+            'name': r.name,
+            'url': r.url[:100] + '...' if len(r.url) > 100 else r.url,
+            'note': r.note,
+            'created_at': r.created_at.isoformat() if r.created_at else None
+        } for r in recent_resources]
+        
+        # 获取最近的技术锦囊
+        recent_tech_tips = TechTip.query.order_by(TechTip.created_at.desc()).limit(limit).all()
+        tech_tip_submissions = [{
+            'id': t.id,
+            'type': 'tech_tip',
+            'name': t.name,
+            'content': t.content[:100] + '...' if len(t.content) > 100 else t.content,
+            'note': t.note,
+            'created_at': t.created_at.isoformat() if t.created_at else None
+        } for t in recent_tech_tips]
+        
+        # 合并所有提交记录并按时间排序
+        all_submissions = tweet_submissions + resource_submissions + tech_tip_submissions
+        all_submissions.sort(key=lambda x: x['created_at'] if x['created_at'] else '', reverse=True)
+        
+        return jsonify(all_submissions)
+    except Exception as e:
+        print(f"Error in get_submissions: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
