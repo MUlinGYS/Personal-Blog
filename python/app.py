@@ -12,13 +12,18 @@ db.init_app(app)
 
 # 初始化数据库
 with app.app_context():
+    # 创建所有数据库表
     db.create_all()
-    # 创建默认管理员账号
-    if not User.query.filter_by(username=Config.DEFAULT_ADMIN_USERNAME).first():
-        admin = User(username=Config.DEFAULT_ADMIN_USERNAME)
-        admin.set_password(Config.DEFAULT_ADMIN_PASSWORD)
-        db.session.add(admin)
-        db.session.commit()
+    # # 检查是否存在默认管理员账号,如果不存在则创建一个
+    # if not User.query.filter_by(username=Config.DEFAULT_ADMIN_USERNAME).first():
+    #     # 创建新的管理员用户对象
+    #     admin = User(username=Config.DEFAULT_ADMIN_USERNAME)
+    #     # 设置管理员密码
+    #     admin.set_password(Config.DEFAULT_ADMIN_PASSWORD)
+    #     # 将管理员用户添加到数据库会话
+    #     db.session.add(admin)
+    #     # 提交更改到数据库
+    #     db.session.commit()
 
 # 登录接口
 @app.route('/api/login', methods=['POST'])
@@ -86,14 +91,66 @@ def create_tweet():
 
 @app.route('/api/tweets', methods=['GET'])
 def get_tweets():
-    tweets = Tweet.query.all()
-    return jsonify([{
-        'id': t.id,
-        'title': t.title,
-        'content': t.content,
-        'note': t.note,
-        'created_at': t.created_at
-    } for t in tweets])
+    try:
+        search = request.args.get('search', '')
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        
+        # 构建基础查询
+        query = Tweet.query
+        
+        # 如果有搜索关键词，先进行搜索
+        if search:
+            # 使用SQLAlchemy的like进行模糊搜索
+            query = query.filter(Tweet.title.like(f'%{search}%'))
+            
+        # 按创建时间倒序排序
+        query = query.order_by(Tweet.created_at.desc())
+        
+        # 分页查询
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        tweets = pagination.items
+        
+        return jsonify({
+            'items': [{
+                'id': t.id,
+                'title': t.title,
+                'content': t.content,
+                'note': t.note,
+                'created_at': t.created_at.isoformat() if t.created_at else None,
+                'updated_at': t.updated_at.isoformat() if t.updated_at else None
+            } for t in tweets],
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page
+        })
+    except Exception as e:
+        print(f"Error in get_tweets: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# 修改推文接口
+@app.route('/api/tweets/<int:tweet_id>', methods=['PUT'])
+def update_tweet(tweet_id):
+    tweet = Tweet.query.get_or_404(tweet_id)
+    data = request.get_json()
+    
+    if 'title' in data:
+        tweet.title = data['title']
+    if 'content' in data:
+        tweet.content = data['content']
+    if 'note' in data:
+        tweet.note = data['note']
+    
+    db.session.commit()
+    return jsonify({'success': True, 'message': '推文修改成功'})
+
+# 删除推文接口
+@app.route('/api/tweets/<int:tweet_id>', methods=['DELETE'])
+def delete_tweet(tweet_id):
+    tweet = Tweet.query.get_or_404(tweet_id)
+    db.session.delete(tweet)
+    db.session.commit()
+    return jsonify({'success': True, 'message': '推文删除成功'})
 
 # 资源链接接口
 @app.route('/api/resources', methods=['POST'])
@@ -110,14 +167,100 @@ def create_resource():
 
 @app.route('/api/resources', methods=['GET'])
 def get_resources():
-    resources = Resource.query.all()
-    return jsonify([{
-        'id': r.id,
-        'name': r.name,
-        'url': r.url,
-        'note': r.note,
-        'created_at': r.created_at
-    } for r in resources])
+    try:
+        search = request.args.get('search', '')
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        
+        # 构建基础查询
+        query = Resource.query
+        
+        # 如果有搜索关键词，先进行搜索
+        if search:
+            # 使用SQLAlchemy的like进行模糊搜索
+            query = query.filter(Resource.name.like(f'%{search}%'))
+            
+        # 按创建时间倒序排序
+        query = query.order_by(Resource.created_at.desc())
+        
+        # 分页查询
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        resources = pagination.items
+        
+        return jsonify({
+            'items': [{
+                'id': r.id,
+                'name': r.name,
+                'url': r.url,
+                'note': r.note,
+                'created_at': r.created_at.isoformat() if r.created_at else None,
+                'updated_at': r.updated_at.isoformat() if r.updated_at else None
+            } for r in resources],
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page
+        })
+    except Exception as e:
+        print(f"Error in get_resources: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/resources/<int:resource_id>', methods=['GET'])
+def get_resource(resource_id):
+    try:
+        resource = Resource.query.get_or_404(resource_id)
+        return jsonify({
+            'id': resource.id,
+            'name': resource.name,
+            'url': resource.url,
+            'note': resource.note,
+            'created_at': resource.created_at.isoformat() if resource.created_at else None,
+            'updated_at': resource.updated_at.isoformat() if resource.updated_at else None
+        })
+    except Exception as e:
+        print(f"Error in get_resource: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/resources/<int:resource_id>', methods=['PUT'])
+def update_resource(resource_id):
+    try:
+        resource = Resource.query.get_or_404(resource_id)
+        data = request.get_json()
+        
+        if 'name' in data:
+            resource.name = data['name']
+        if 'url' in data:
+            resource.url = data['url']
+        if 'note' in data:
+            resource.note = data['note']
+        
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': '资源更新成功',
+            'resource': {
+                'id': resource.id,
+                'name': resource.name,
+                'url': resource.url,
+                'note': resource.note,
+                'created_at': resource.created_at.isoformat() if resource.created_at else None,
+                'updated_at': resource.updated_at.isoformat() if resource.updated_at else None
+            }
+        })
+    except Exception as e:
+        print(f"Error in update_resource: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# 删除资源接口
+@app.route('/api/resources/<int:resource_id>', methods=['DELETE'])
+def delete_resource(resource_id):
+    try:
+        resource = Resource.query.get_or_404(resource_id)
+        db.session.delete(resource)
+        db.session.commit()
+        return jsonify({'success': True, 'message': '资源删除成功'})
+    except Exception as e:
+        print(f"Error in delete_resource: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 # 技术锦囊接口
 @app.route('/api/tech-tips', methods=['POST'])
@@ -134,14 +277,88 @@ def create_tech_tip():
 
 @app.route('/api/tech-tips', methods=['GET'])
 def get_tech_tips():
-    tech_tips = TechTip.query.all()
-    return jsonify([{
-        'id': t.id,
-        'name': t.name,
-        'content': t.content,
-        'note': t.note,
-        'created_at': t.created_at
-    } for t in tech_tips])
+    try:
+        search = request.args.get('search', '')
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 10))
+        
+        # 构建基础查询
+        query = TechTip.query
+        
+        # 如果有搜索关键词，先进行搜索
+        if search:
+            # 使用SQLAlchemy的like进行模糊搜索
+            query = query.filter(TechTip.name.like(f'%{search}%'))
+            
+        # 按创建时间倒序排序
+        query = query.order_by(TechTip.created_at.desc())
+        
+        # 分页查询
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        tech_tips = pagination.items
+        
+        return jsonify({
+            'items': [{
+                'id': t.id,
+                'name': t.name,
+                'content': t.content,
+                'note': t.note,
+                'created_at': t.created_at.isoformat() if t.created_at else None,
+                'updated_at': t.updated_at.isoformat() if t.updated_at else None
+            } for t in tech_tips],
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page
+        })
+    except Exception as e:
+        print(f"Error in get_tech_tips: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# 修改技术锦囊接口
+@app.route('/api/tech-tips/<int:tip_id>', methods=['PUT'])
+def update_tech_tip(tip_id):
+    try:
+        tech_tip = TechTip.query.get_or_404(tip_id)
+        data = request.get_json()
+        
+        if 'name' in data:
+            tech_tip.name = data['name']
+        if 'content' in data:
+            tech_tip.content = data['content']
+        if 'note' in data:
+            tech_tip.note = data['note']
+        
+        # 更新updated_at字段
+        tech_tip.updated_at = datetime.datetime.utcnow()
+        
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': '技术锦囊更新成功',
+            'tech_tip': {
+                'id': tech_tip.id,
+                'name': tech_tip.name,
+                'content': tech_tip.content,
+                'note': tech_tip.note,
+                'created_at': tech_tip.created_at.isoformat() if tech_tip.created_at else None,
+                'updated_at': tech_tip.updated_at.isoformat() if tech_tip.updated_at else None
+            }
+        })
+    except Exception as e:
+        print(f"Error in update_tech_tip: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# 删除技术锦囊接口
+@app.route('/api/tech-tips/<int:tip_id>', methods=['DELETE'])
+def delete_tech_tip(tip_id):
+    try:
+        tech_tip = TechTip.query.get_or_404(tip_id)
+        db.session.delete(tech_tip)
+        db.session.commit()
+        return jsonify({'success': True, 'message': '技术锦囊删除成功'})
+    except Exception as e:
+        print(f"Error in delete_tech_tip: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 # 归档接口
 @app.route('/api/archives', methods=['POST'])

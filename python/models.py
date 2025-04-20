@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+import datetime
 
 db = SQLAlchemy()
 
@@ -20,6 +21,7 @@ class Tweet(db.Model):
     content = db.Column(db.Text, nullable=False)
     note = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     archive_id = db.Column(db.Integer, db.ForeignKey('archive.id'))
 
 class Resource(db.Model):
@@ -28,6 +30,7 @@ class Resource(db.Model):
     url = db.Column(db.String(200), nullable=False)
     note = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     archive_id = db.Column(db.Integer, db.ForeignKey('archive.id'))
 
 class TechTip(db.Model):
@@ -36,6 +39,7 @@ class TechTip(db.Model):
     content = db.Column(db.Text, nullable=False)
     note = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     archive_id = db.Column(db.Integer, db.ForeignKey('archive.id'))
 
 class Archive(db.Model):
