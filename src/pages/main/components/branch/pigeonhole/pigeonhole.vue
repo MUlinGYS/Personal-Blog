@@ -45,7 +45,16 @@
 
 		<!-- 提交记录时间线 -->
 		<div class="timeline-container">
-			<h2 class="section-title">最近提交记录</h2>
+			<div class="section-header">
+				<h2 class="section-title">最近提交记录</h2>
+				<el-button type="primary" circle @click="refreshAll" :loading="refreshing" class="refresh-button">
+					<template #icon>
+						<el-icon v-if="!refreshing">
+							<Refresh />
+						</el-icon>
+					</template>
+				</el-button>
+			</div>
 			<el-timeline>
 				<el-timeline-item v-for="(submission, index) in submissions" :key="index"
 					:type="getTimelineItemType(submission.type)" :color="getTimelineItemColor(submission.type)"
@@ -82,7 +91,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Document, Link, Collection, ChatLineRound, InfoFilled } from '@element-plus/icons-vue';
+import { Document, Link, Collection, ChatLineRound, InfoFilled, Refresh } from '@element-plus/icons-vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
@@ -102,6 +111,9 @@ const submissions = ref([]);
 // 折叠面板激活项
 const activeNames = ref([]);
 
+// 刷新状态
+const refreshing = ref(false);
+
 // 获取统计数据
 const fetchStatistics = async () => {
 	try {
@@ -117,7 +129,7 @@ const fetchStatistics = async () => {
 const fetchSubmissions = async () => {
 	try {
 		const response = await axios.get('http://localhost:5000/api/submissions', {
-			params: { limit: 20 }
+			params: { limit: 6 }
 		});
 		submissions.value = response.data;
 		// 初始化折叠面板激活项
@@ -125,6 +137,33 @@ const fetchSubmissions = async () => {
 	} catch (error) {
 		ElMessage.error('获取提交记录失败');
 		console.error(error);
+	}
+};
+
+// 刷新所有数据
+const refreshAll = async () => {
+	refreshing.value = true;
+	try {
+		// 同时刷新统计数据和提交记录
+		await Promise.all([fetchStatistics(), fetchSubmissions()]);
+		ElMessage.success('数据已刷新');
+	} catch (error) {
+		console.error('刷新数据失败:', error);
+	} finally {
+		refreshing.value = false;
+	}
+};
+
+// 刷新提交记录
+const refreshSubmissions = async () => {
+	refreshing.value = true;
+	try {
+		await fetchSubmissions();
+		ElMessage.success('提交记录已刷新');
+	} catch (error) {
+		console.error('刷新提交记录失败:', error);
+	} finally {
+		refreshing.value = false;
 	}
 };
 
@@ -246,10 +285,17 @@ onMounted(() => {
 	margin-top: 40px;
 }
 
+.section-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
 .section-title {
 	font-size: 20px;
 	font-weight: 600;
-	margin-bottom: 20px;
+	margin: 0;
 	color: #303133;
 }
 
@@ -326,5 +372,26 @@ onMounted(() => {
 
 .stat-label {
 	display: none;
+}
+
+/* 刷新按钮样式 */
+.refresh-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+}
+
+.refresh-button :deep(.el-icon) {
+	margin: 0;
+}
+
+.refresh-button :deep(.el-loading-spinner) {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 </style>
