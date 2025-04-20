@@ -123,12 +123,13 @@ const handleLogin = async () => {
 			username: account.value,
 			password: password.value,
 		});
-		if (res.success) {
+		if (res.message) {
 			const token = res.token;
 			Cookies.set("token", token);
 			openNotification("成功", "登录成功", "success");
 			router.push("/index");
 		} else {
+			console.log(res);
 			openNotification("警告", res.message);
 		}
 	} catch (error) {

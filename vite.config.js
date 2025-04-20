@@ -15,5 +15,13 @@ export default defineConfig({
         alias: {
         '@': resolve(__dirname, 'src')  // 将 '@' 的别名设置为 'src/' 
         }
+    },
+    css: {
+        devSourcemap: false,
+        preprocessorOptions: {
+            css: {
+                sourceMap: false
+            }
+        }
     }
 }) 
