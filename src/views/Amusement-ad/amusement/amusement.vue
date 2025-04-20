@@ -15,71 +15,20 @@
 		</el-button>
 
 		<!-- 抽屉 -->
-		<el-drawer v-model="drawer" :with-header="false" class="moyu" @click="drawer = false">
-			<img src="https://api.vvhan.com/api/moyu" />
+		<el-drawer v-model="drawer" :with-header="false" class="moyu" @click="drawer = false"
+			style="background: transparent">
+			<div style="display: flex; justify-content: center; align-items: center; height: 100%">
+				<img src="https://api.vvhan.com/api/moyu" style="max-width: 100%; max-height: 100%" />
+			</div>
 		</el-drawer>
 
-		<el-card class="box-card" v-if="music.picUrl">
-			<img :src="music.picUrl" class="music-cover" />
-			<div class="music-info">
-				<h1 class="music-title">{{ music.name }}</h1>
-				<h2 class="music-auther">{{ music.auther }}</h2>
-			</div>
-			<el-button circle @click="togglePlay"><el-icon>
-					<SwitchButton />
-				</el-icon></el-button>
-		</el-card>
-		<el-empty description="娱乐位待添加" />
+
 	</div>
 </template>
-<script>
-import { ref, onMounted, defineComponent } from 'vue';
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue';
 
-export default defineComponent({
-	name: 'Amusement',
-	setup() {
-		const drawer = ref(false);
-		const music = ref({
-			picUrl: '',
-			name: '',
-			auther: '',
-			url: '',
-		});
-		let audio = new Audio();
-
-		const fetchMusic = async () => {
-			const response = await axios.get(
-				'https://api.vvhan.com/api/wyMusic/%E6%96%B0%E6%AD%8C%E6%A6%9C?type=json'
-			);
-			const fetchedMusic = response.data.info;
-
-			if (fetchedMusic.name.length > 7 || fetchedMusic.auther.length > 7) {
-				await fetchMusic();
-				return;
-			}
-
-			music.value = fetchedMusic;
-			audio.src = music.value.url;
-		};
-
-		onMounted(fetchMusic);
-
-		const togglePlay = () => {
-			if (audio.paused) {
-				audio.play();
-			} else {
-				audio.pause();
-			}
-		};
-
-		return {
-			drawer,
-			music,
-			togglePlay
-		};
-	}
-});
+const drawer = ref(false);
 </script>
 
 <style lang="less" scoped>
