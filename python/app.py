@@ -4,11 +4,25 @@ from models import db, User, Tweet, Resource, TechTip, Archive, ViewCount
 from config import Config
 import datetime
 import secrets  # 添加token
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+import time
 
 app = Flask(__name__, static_folder='dist', static_url_path='')
 app.config.from_object(Config)
 CORS(app)
 db.init_app(app)
+
+# 添加限流器
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",
+)
+
+# 存储用户最近一次访问时间的字典
+view_count_timestamps = {}
 
 # 添加根路由处理
 @app.route('/')
@@ -408,6 +422,31 @@ def get_statistics():
 @app.route('/api/view-count/<content_type>/<int:content_id>', methods=['POST'])
 def increment_view_count(content_type, content_id):
     try:
+        # 获取用户IP
+        client_ip = request.remote_addr
+        # 生成唯一键，结合IP、内容类型和ID
+        key = f"{client_ip}:{content_type}:{content_id}"
+        
+        current_time = time.time()
+        # 检查是否在3秒内已经请求过
+        if key in view_count_timestamps and current_time - view_count_timestamps[key] < 3:
+            # 如果3秒内已经请求过，直接返回成功，但不更新计数
+            # 查询当前计数以返回正确的值
+            view_count = ViewCount.query.filter_by(
+                content_type=content_type,
+                content_id=content_id
+            ).first()
+            
+            count = view_count.view_count if view_count else 0
+            
+            return jsonify({
+                'success': True,
+                'view_count': count
+            })
+        
+        # 更新最后访问时间
+        view_count_timestamps[key] = current_time
+        
         # 查找或创建阅读量记录
         view_count = ViewCount.query.filter_by(
             content_type=content_type,
