@@ -13,4 +13,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* 隐藏整个页面的滚动条 */
+html,
+body {
+	scrollbar-width: none;
+	/* Firefox */
+	-ms-overflow-style: none;
+	/* IE and Edge */
+}
+
+/* 隐藏WebKit浏览器(Chrome, Safari)的滚动条 */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+}
+</style>
