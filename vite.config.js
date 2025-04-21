@@ -23,5 +23,9 @@ export default defineConfig({
                 sourceMap: false
             }
         }
+    },
+    build: {
+        outDir: './python/dist', // 指定打包输出目录，默认为 'dist'
+        // outDir: 'build'  // 将输出目录改为 build
     }
 }) 

@@ -5,7 +5,7 @@ from config import Config
 import datetime
 import secrets  # 添加token
 
-app = Flask(__name__, static_folder='../dist', static_url_path='')
+app = Flask(__name__, static_folder='../python/dist', static_url_path='')
 app.config.from_object(Config)
 CORS(app)
 db.init_app(app)
