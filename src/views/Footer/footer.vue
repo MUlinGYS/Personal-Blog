@@ -87,7 +87,7 @@ import request from '@/utils/request';
 export default defineComponent({
 	name: 'Footer',
 	setup() {
-		const startDateTime = new Date('2024-02-20T00:00:00Z');
+		const startDateTime = new Date('2025-04-21T00:00:00Z');
 		const startTime = ref(startDateTime.getTime());
 		const statistics = ref({
 			monthly_views: 0,
