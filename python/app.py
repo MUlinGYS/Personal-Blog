@@ -5,7 +5,7 @@ from config import Config
 import datetime
 import secrets  # 添加token
 
-app = Flask(__name__, static_folder='../python/dist', static_url_path='')
+app = Flask(__name__, static_folder='dist', static_url_path='')
 app.config.from_object(Config)
 CORS(app)
 db.init_app(app)
@@ -485,4 +485,4 @@ def get_submissions():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8989, debug=True)
