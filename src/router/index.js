@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import login from '../views/login/login.vue'
 import Cookies from 'js-cookie'
 
@@ -24,7 +24,7 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHashHistory(), // 修改为hash模式
+    history: createWebHashHistory(),
     routes,
 })
 
