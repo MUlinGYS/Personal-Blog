@@ -119,11 +119,12 @@ const switchToUpdate = () => {
 // 处理登录
 const handleLogin = async () => {
 	try {
-		const res = await request.post("/login", {
+		const response = await request.post("/login", {
 			username: account.value,
 			password: password.value,
 		});
-		if (res.message) {
+		const res = response.data;  // 获取实际的响应数据
+		if (res.success) {
 			const token = res.token;
 			Cookies.set("token", token);
 			openNotification("成功", "登录成功", "success");
@@ -133,8 +134,8 @@ const handleLogin = async () => {
 			openNotification("警告", res.message);
 		}
 	} catch (error) {
-		if (error.response?.message) {
-			openNotification("错误", error.response.message);
+		if (error.response?.data?.message) {
+			openNotification("错误", error.response.data.message);
 		} else {
 			openNotification("错误", "登录失败，请检查网络连接");
 		}
