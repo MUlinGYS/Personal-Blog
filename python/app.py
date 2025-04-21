@@ -263,7 +263,7 @@ def delete_resource(resource_id):
         print(f"Error in delete_resource: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-# 技术锦囊接口
+# 代码锦囊接口
 @app.route('/api/tech-tips', methods=['POST'])
 def create_tech_tip():
     data = request.get_json()
@@ -274,7 +274,7 @@ def create_tech_tip():
     )
     db.session.add(tech_tip)
     db.session.commit()
-    return jsonify({'success': True, 'message': '技术锦囊创建成功'})
+    return jsonify({'success': True, 'message': '代码锦囊创建成功'})
 
 @app.route('/api/tech-tips', methods=['GET'])
 def get_tech_tips():
@@ -315,7 +315,7 @@ def get_tech_tips():
         print(f"Error in get_tech_tips: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-# 修改技术锦囊接口
+# 修改代码锦囊接口
 @app.route('/api/tech-tips/<int:tip_id>', methods=['PUT'])
 def update_tech_tip(tip_id):
     try:
@@ -335,7 +335,7 @@ def update_tech_tip(tip_id):
         db.session.commit()
         return jsonify({
             'success': True,
-            'message': '技术锦囊更新成功',
+            'message': '代码锦囊更新成功',
             'tech_tip': {
                 'id': tech_tip.id,
                 'name': tech_tip.name,
@@ -349,14 +349,14 @@ def update_tech_tip(tip_id):
         print(f"Error in update_tech_tip: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-# 删除技术锦囊接口
+# 删除代码锦囊接口
 @app.route('/api/tech-tips/<int:tip_id>', methods=['DELETE'])
 def delete_tech_tip(tip_id):
     try:
         tech_tip = TechTip.query.get_or_404(tip_id)
         db.session.delete(tech_tip)
         db.session.commit()
-        return jsonify({'success': True, 'message': '技术锦囊删除成功'})
+        return jsonify({'success': True, 'message': '代码锦囊删除成功'})
     except Exception as e:
         print(f"Error in delete_tech_tip: {str(e)}")
         return jsonify({'error': str(e)}), 500
@@ -390,7 +390,7 @@ def get_statistics():
         tweets = Tweet.query.all()
         for tweet in tweets:
             total_words += len(tweet.content)
-        # 统计技术锦囊字数
+        # 统计代码锦囊字数
         tech_tips = TechTip.query.all()
         for tip in tech_tips:
             total_words += len(tip.content)
@@ -398,7 +398,7 @@ def get_statistics():
         return jsonify({
             'tweet_count': tweet_count,      # 推文数量
             'resource_count': resource_count, # 资源数量
-            'tech_tip_count': tech_tip_count, # 技术锦囊数量
+            'tech_tip_count': tech_tip_count, # 代码锦囊数量
             'monthly_views': monthly_views,   # 本月访问量
             'total_views': total_views,       # 总访问量
             'total_reads': total_reads,       # 总阅读量
@@ -467,7 +467,7 @@ def increment_view_count(content_type, content_id):
 @app.route('/api/submissions', methods=['GET'])
 def get_submissions():
     try:
-        # 获取最近的提交记录，包括推文、资源和技术锦囊
+        # 获取最近的提交记录，包括推文、资源和代码锦囊
         # 按创建时间倒序排序，限制返回数
         limit = int(request.args.get('limit', 6))  # 默认限制为6条
         
@@ -493,7 +493,7 @@ def get_submissions():
             'created_at': r.created_at.isoformat() if r.created_at else None
         } for r in recent_resources]
         
-        # 获取最近的技术锦囊
+        # 获取最近的代码锦囊
         recent_tech_tips = TechTip.query.order_by(TechTip.created_at.desc()).limit(limit).all()
         tech_tip_submissions = [{
             'id': t.id,

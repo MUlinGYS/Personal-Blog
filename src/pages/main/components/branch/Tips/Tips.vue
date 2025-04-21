@@ -2,7 +2,7 @@
 	<div class="tweets-wrapper">
 		<!-- 搜索和添加区域 -->
 		<div class="action-bar">
-			<el-input v-model="searchQuery" placeholder="搜索技术锦囊标题" class="search-input" clearable @input="handleSearch">
+			<el-input v-model="searchQuery" placeholder="搜索代码锦囊标题" class="search-input" clearable @input="handleSearch">
 				<template #prefix>
 					<el-icon>
 						<Search />
@@ -16,11 +16,11 @@
 					</el-icon>
 					刷新
 				</el-button>
-				<el-button type="primary" @click="openTipDialog()">添加技术锦囊</el-button>
+				<el-button type="primary" @click="openTipDialog()">添加代码锦囊</el-button>
 			</div>
 		</div>
 
-		<!-- 技术锦囊列表容器 -->
+		<!-- 代码锦囊列表容器 -->
 		<div class="tweets-container">
 			<ul v-infinite-scroll="load" class="infinite-list" :infinite-scroll-disabled="loading || !hasMore"
 				:infinite-scroll-immediate="false" infinite-scroll-distance="100">
@@ -45,7 +45,7 @@
 			</ul>
 		</div>
 
-		<!-- 技术锦囊详情对话框 -->
+		<!-- 代码锦囊详情对话框 -->
 		<el-dialog v-model="detailDialogVisible" :title="currentTip?.name" width="60%">
 			<div class="tweet-detail">
 				<div class="tweet-meta">
@@ -61,18 +61,18 @@
 			</div>
 		</el-dialog>
 
-		<!-- 添加/编辑技术锦囊对话框 -->
-		<el-dialog v-model="tipDialogVisible" :title="isEdit ? '编辑技术锦囊' : '添加技术锦囊'" width="50%" class="edit-dialog">
+		<!-- 添加/编辑代码锦囊对话框 -->
+		<el-dialog v-model="tipDialogVisible" :title="isEdit ? '编辑代码锦囊' : '添加代码锦囊'" width="50%" class="edit-dialog">
 			<div class="dialog-header">
 				<p class="edit-time" v-if="isEdit">最后编辑时间：{{ formatDate(tipData.updated_at) }}</p>
 			</div>
 			<el-form :model="tipData" label-width="80px" class="edit-form">
 				<el-form-item label="名称" required>
-					<el-input v-model="tipData.name" placeholder="请输入技术锦囊名称" class="title-input" :maxlength="100"
+					<el-input v-model="tipData.name" placeholder="请输入代码锦囊名称" class="title-input" :maxlength="100"
 						show-word-limit></el-input>
 				</el-form-item>
 				<el-form-item label="内容" required>
-					<el-input v-model="tipData.content" type="textarea" rows="6" placeholder="请输入技术锦囊内容"
+					<el-input v-model="tipData.content" type="textarea" rows="6" placeholder="请输入代码锦囊内容"
 						class="content-input" :maxlength="100000" show-word-limit></el-input>
 				</el-form-item>
 				<el-form-item label="备注">
@@ -108,17 +108,17 @@ const currentPage = ref(1);
 // 每页数量
 const perPage = 10;
 
-// 技术锦囊列表数据
+// 代码锦囊列表数据
 const tips = ref([]);
 // 对话框显示状态
 const tipDialogVisible = ref(false);
 // 详情对话框显示状态
 const detailDialogVisible = ref(false);
-// 当前查看的技术锦囊
+// 当前查看的代码锦囊
 const currentTip = ref(null);
 // 是否为编辑模式
 const isEdit = ref(false);
-// 技术锦囊表单数据
+// 代码锦囊表单数据
 const tipData = ref({
 	id: null,
 	name: '',
@@ -133,7 +133,7 @@ const hasMore = ref(true);
 // 是否正在加载中
 const isLoading = ref(false);
 
-// 加载技术锦囊列表
+// 加载代码锦囊列表
 const loadTips = async () => {
 	// 如果正在加载中，直接返回
 	if (isLoading.value) return;
@@ -168,7 +168,7 @@ const loadTips = async () => {
 			currentPage.value++;
 		}
 	} catch (error) {
-		ElMessage.error('加载技术锦囊失败');
+		ElMessage.error('加载代码锦囊失败');
 		console.error(error);
 	} finally {
 		loading.value = false;
@@ -191,7 +191,7 @@ const handleSearch = () => {
 	}, 300);
 };
 
-// 打开技术锦囊对话框
+// 打开代码锦囊对话框
 const openTipDialog = (tip = null) => {
 	isEdit.value = !!tip;
 	if (tip) {
@@ -222,19 +222,19 @@ const handleSubmit = async () => {
 				content: tipData.value.content,
 				note: tipData.value.note
 			});
-			ElMessage.success('修改技术锦囊成功');
+			ElMessage.success('修改代码锦囊成功');
 		} else {
 			await request.post('/tech-tips', {
 				name: tipData.value.name,
 				content: tipData.value.content,
 				note: tipData.value.note
 			});
-			ElMessage.success('添加技术锦囊成功');
+			ElMessage.success('添加代码锦囊成功');
 		}
 		tipDialogVisible.value = false;
 		loadTips();
 	} catch (error) {
-		ElMessage.error(isEdit.value ? '修改技术锦囊失败' : '添加技术锦囊失败');
+		ElMessage.error(isEdit.value ? '修改代码锦囊失败' : '添加代码锦囊失败');
 		console.error(error);
 	}
 };
@@ -254,7 +254,7 @@ const truncateContent = (content) => {
 	return lines.slice(0, 5).join('\n') + '...';
 };
 
-// 显示技术锦囊详情
+// 显示代码锦囊详情
 const showTipDetail = async (tip) => {
 	try {
 		// 增加阅读量
@@ -266,10 +266,10 @@ const showTipDetail = async (tip) => {
 	}
 };
 
-// 删除技术锦囊
+// 删除代码锦囊
 const handleDeleteTip = (tip) => {
 	ElMessageBox.confirm(
-		'确定要删除这个技术锦囊吗？',
+		'确定要删除这个代码锦囊吗？',
 		'删除确认',
 		{
 			confirmButtonText: '确定',
@@ -279,12 +279,12 @@ const handleDeleteTip = (tip) => {
 	).then(async () => {
 		try {
 			await request.delete(`/tech-tips/${tip.id}`);
-			ElMessage.success('删除技术锦囊成功');
-			// 重新加载技术锦囊列表
+			ElMessage.success('删除代码锦囊成功');
+			// 重新加载代码锦囊列表
 			currentPage.value = 1;
 			loadTips();
 		} catch (error) {
-			ElMessage.error('删除技术锦囊失败');
+			ElMessage.error('删除代码锦囊失败');
 			console.error(error);
 		}
 	}).catch(() => {
@@ -298,7 +298,7 @@ const load = () => {
 	loadTips();
 };
 
-// 刷新技术锦囊列表
+// 刷新代码锦囊列表
 const handleRefresh = () => {
 	currentPage.value = 1;
 	searchQuery.value = '';
@@ -307,7 +307,7 @@ const handleRefresh = () => {
 	loadTips();
 };
 
-// 组件挂载时加载技术锦囊
+// 组件挂载时加载代码锦囊
 onMounted(() => {
 	loadTips();
 });
@@ -372,7 +372,7 @@ onMounted(() => {
 	font-size: 16px;
 }
 
-/* 技术锦囊列表容器 */
+/* 代码锦囊列表容器 */
 .tweets-container {
 	background-color: rgba(255, 255, 255, 0.15);
 	border-radius: 12px;
@@ -385,7 +385,7 @@ onMounted(() => {
 	overflow: hidden;
 }
 
-/* 技术锦囊列表样式 */
+/* 代码锦囊列表样式 */
 .infinite-list {
 	height: 100%;
 	border-radius: 12px;
@@ -482,7 +482,7 @@ onMounted(() => {
 	background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* 技术锦囊内容样式 */
+/* 代码锦囊内容样式 */
 .text.item {
 	padding: 16px 20px;
 	white-space: pre-line;
@@ -501,7 +501,7 @@ onMounted(() => {
 	-webkit-backdrop-filter: blur(4px);
 }
 
-/* 技术锦囊底部样式 */
+/* 代码锦囊底部样式 */
 .el-card__footer {
 	padding: 12px 20px;
 	background-color: transparent;

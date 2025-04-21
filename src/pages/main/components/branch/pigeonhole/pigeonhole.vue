@@ -24,7 +24,7 @@
 				</el-statistic>
 			</el-col>
 			<el-col :span="6">
-				<el-statistic title="技术锦囊统计" :value="statistics.tech_tip_count || 0">
+				<el-statistic title="代码锦囊统计" :value="statistics.tech_tip_count || 0">
 					<template #suffix>
 						<el-icon style="vertical-align: -0.125em">
 							<Collection />
@@ -215,7 +215,7 @@ const getSubmissionTypeName = (type) => {
 		case 'resource':
 			return '资源链接';
 		case 'tech_tip':
-			return '技术锦囊';
+			return '代码锦囊';
 		default:
 			return '未知';
 	}

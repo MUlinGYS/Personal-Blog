@@ -6,7 +6,7 @@
 		<el-tab-pane label="资源链接" name="second" :lazy="true">
 			<Resource></Resource>
 		</el-tab-pane>
-		<el-tab-pane label="技术锦囊" name="third" :lazy="true">
+		<el-tab-pane label="代码锦囊" name="third" :lazy="true">
 			<Tips></Tips>
 		</el-tab-pane>
 		<el-tab-pane label="归档" name="fourth" :lazy="true">
