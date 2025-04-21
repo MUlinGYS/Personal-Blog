@@ -1,6 +1,6 @@
 modules.exports = {
   lintOnSave: false,
-  publicPath: '/',
+  publicPath: './',
   configureWebpack: {
     resolve: {
       alias: {

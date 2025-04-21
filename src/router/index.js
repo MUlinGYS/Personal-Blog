@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import login from '../views/login/login.vue'
 import Cookies from 'js-cookie'
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
     {
         path: '/',
         name:'login',
@@ -24,11 +24,11 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(), // 修改为hash模式
     routes,
 })
 
-router.beforeEach((to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+router.beforeEach((to, _from, next) => {
     const token = Cookies.get('token');
         if (to.matched.some(record => record.meta.requiresAuth)) {
             if (token) {
