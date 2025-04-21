@@ -46,7 +46,8 @@ export default defineComponent({
 
 				// 添加樱花特效
 				const script = document.createElement('script');
-				script.src = '/src/views/index/yinghua.js';
+				// 使用相对路径，从当前文件所在目录开始计算
+				script.src = 'yinghua.js';
 				document.body.appendChild(script);
 
 				// 10秒后移除特效
