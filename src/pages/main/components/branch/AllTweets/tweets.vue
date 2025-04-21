@@ -50,8 +50,8 @@
 				<div class="tweet-meta">
 					<span class="time">发布时间：{{ formatDate(currentTweet?.created_at) }}</span>
 				</div>
-				<div class="tweet-content">
-					{{ currentTweet?.content }}
+				<div class="tweet-content" v-if="currentTweet">
+					<div v-html="formatContent(currentTweet.content)"></div>
 				</div>
 				<div class="tweet-note" v-if="currentTweet?.note">
 					<el-divider content-position="left">备注</el-divider>
@@ -61,7 +61,7 @@
 		</el-dialog>
 
 		<!-- 添加/编辑推文对话框 -->
-		<el-dialog v-model="tweetDialogVisible" :title="isEdit ? '编辑推文' : '添加推文'" width="50%" class="edit-dialog">
+		<el-dialog v-model="tweetDialogVisible" :title="isEdit ? '编辑推文' : '添加推文'" width="70%" class="edit-dialog">
 			<div class="dialog-header">
 				<p class="edit-time" v-if="isEdit">最后编辑时间：{{ formatDate(tweetData.updated_at) }}</p>
 			</div>
@@ -70,10 +70,39 @@
 					<el-input v-model="tweetData.title" placeholder="请输入推文标题" class="title-input" :maxlength="100"
 						show-word-limit></el-input>
 				</el-form-item>
-				<el-form-item label="内容" required>
-					<el-input v-model="tweetData.content" type="textarea" rows="6" placeholder="请输入推文内容"
-						class="content-input" :maxlength="100000" show-word-limit></el-input>
-				</el-form-item>
+
+				<el-tabs v-model="activeTab" class="content-tabs">
+					<el-tab-pane label="编辑内容" name="edit">
+						<el-form-item label="内容" required>
+							<el-input v-model="tweetData.content" type="textarea" rows="10" placeholder="请输入推文内容"
+								class="content-input" :maxlength="100000" show-word-limit></el-input>
+							<div class="coding-guide">
+								<el-popover placement="bottom" :width="300" trigger="hover">
+									<template #reference>
+										<el-link type="primary" :underline="false" class="guide-link">
+											<el-icon>
+												<InfoFilled />
+											</el-icon>
+											代码块编写指南
+										</el-link>
+									</template>
+									<template #default>
+										<div class="guide-content">
+											<h4>如何添加代码块</h4>
+											<p>使用三个反引号(```)包裹代码</p>
+										</div>
+									</template>
+								</el-popover>
+							</div>
+						</el-form-item>
+					</el-tab-pane>
+					<el-tab-pane label="预览" name="preview">
+						<div class="preview-container">
+							<div class="preview-content" v-html="formatContent(tweetData.content)"></div>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
+
 				<el-form-item label="备注">
 					<el-input v-model="tweetData.note" type="textarea" rows="2" placeholder="请输入备注（可选）"
 						class="note-input" :maxlength="1000" show-word-limit></el-input>
@@ -93,9 +122,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Search, Refresh } from '@element-plus/icons-vue';
+import { Search, Refresh, InfoFilled } from '@element-plus/icons-vue';
 import axios from 'axios';
 import request from '@/utils/request'; // 导入request实例
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css'; // 导入一个喜欢的主题样式
 
 // 搜索查询
 const searchQuery = ref('');
@@ -125,10 +156,37 @@ const tweetData = ref({
 	note: ''
 });
 
+// 编辑页面当前激活的标签页
+const activeTab = ref('edit');
+
 // 加载状态
 const loading = ref(false);
 // 是否还有更多数据
 const hasMore = ref(true);
+
+// 处理内容格式化，检测并高亮代码块
+const formatContent = (content) => {
+	if (!content) return '';
+
+	// 检测是否使用```包裹的代码块
+	const codeBlockRegex = /```([a-z]*)\n([\s\S]*?)```/g;
+
+	// 替换代码块为高亮版本
+	const formattedContent = content.replace(codeBlockRegex, (match, language, code) => {
+		// 简单高亮，不检测语言
+		try {
+			const highlighted = hljs.highlightAuto(code);
+			return `<pre class="code-block"><code class="hljs">${highlighted.value}</code></pre>`;
+		} catch (error) {
+			console.error('代码高亮出错:', error);
+			return `<pre class="code-block"><code>${code}</code></pre>`;
+		}
+	});
+
+	// 处理普通文本（非代码块部分）
+	// 将换行符转换为<br>并保持段落格式
+	return formattedContent.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
+};
 
 // 加载推文列表
 const loadTweets = async () => {
@@ -311,6 +369,34 @@ onMounted(() => {
 	min-height: 100vh;
 }
 
+/* 全局滚动条美化 - 添加:deep使其生效于子组件 */
+:deep(::-webkit-scrollbar) {
+	width: 4px;
+	height: 6px;
+}
+
+:deep(::-webkit-scrollbar-thumb) {
+	background-color: rgba(255, 255, 255, 0.3);
+	border-radius: 2px;
+}
+
+:deep(::-webkit-scrollbar-track) {
+	background-color: rgba(250, 5, 5, 0.05);
+}
+
+:deep(::-webkit-scrollbar-button) {
+	display: none;
+}
+
+/* 为代码块特别定制的滚动条样式 */
+.code-block code::-webkit-scrollbar-thumb {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.code-block code::-webkit-scrollbar-track {
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* 操作栏样式 */
 .action-bar {
 	display: flex;
@@ -383,19 +469,6 @@ onMounted(() => {
 	overflow-x: hidden !important;
 	overflow-y: auto !important;
 	list-style: none;
-}
-
-.infinite-list::-webkit-scrollbar {
-	width: 6px;
-}
-
-.infinite-list::-webkit-scrollbar-thumb {
-	background-color: #dcdfe6;
-	border-radius: 3px;
-}
-
-.infinite-list::-webkit-scrollbar-track {
-	background-color: #f5f7fa;
 }
 
 .infinite-list .infinite-list-item {
@@ -602,6 +675,84 @@ onMounted(() => {
 .dialog-footer .confirm-btn:hover {
 	background-color: var(--el-color-primary-light-3);
 	border-color: var(--el-color-primary-light-3);
+}
+
+/* 内容编辑与预览标签页 */
+.content-tabs {
+	margin-bottom: 24px;
+}
+
+.preview-container {
+	background-color: #f5f7fa;
+	border-radius: 6px;
+	padding: 16px;
+	min-height: 240px;
+	max-height: 500px;
+	overflow-y: auto;
+}
+
+.preview-content {
+	font-size: 15px;
+	line-height: 1.8;
+	color: #303133;
+}
+
+.preview-content p {
+	margin-bottom: 16px;
+}
+
+/* 代码块样式 */
+.code-block {
+	margin: 16px 0;
+	border-radius: 6px;
+	overflow: hidden;
+	background-color: #282c34;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.code-block code {
+	display: block;
+	padding: 16px;
+	font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+	font-size: 14px;
+	line-height: 1.5;
+	overflow-x: auto;
+}
+
+/* 代码输入指南样式 */
+.coding-guide {
+	margin-top: 16px;
+}
+
+.guide-link {
+	color: rgba(52, 152, 219, 0.8);
+}
+
+.guide-link:hover {
+	color: rgba(41, 128, 185, 0.9);
+}
+
+.guide-content {
+	padding: 16px;
+}
+
+.guide-content h4 {
+	margin-bottom: 16px;
+	font-size: 18px;
+	font-weight: 600;
+	color: #303133;
+}
+
+.guide-content p {
+	margin-bottom: 16px;
+	font-size: 14px;
+	color: #606266;
+}
+
+.guide-content pre {
+	background-color: #f5f7fa;
+	padding: 16px;
+	border-radius: 4px;
 }
 
 /* 详情对话框样式 */
