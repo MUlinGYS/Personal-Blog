@@ -144,7 +144,7 @@ export default defineComponent({
 					resource_count: response.data.resource_count || 0,
 					tech_tip_count: response.data.tech_tip_count || 0
 				};
-				console.log('获取到的统计数据:', statistics.value);
+				// console.log('获取到的统计数据:', statistics.value);
 			} catch (error) {
 				console.error('获取统计数据失败:', error);
 			}
