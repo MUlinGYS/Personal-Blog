@@ -46,26 +46,10 @@ export default defineComponent({
 
 				// 添加樱花特效
 				const script = document.createElement('script');
-				script.src = 'https://api.vvhan.com/api/script/yinghua';
-
-				// 保存原始的console方法
-				const originalConsole = {
-					log: console.log,
-					group: console.group,
-					groupEnd: console.groupEnd
-				};
-
-				// 重写console方法
-				['log', 'group', 'groupEnd'].forEach(method => {
-					console[method] = function () {
-						// 直接返回，不执行任何操作
-						return;
-					};
-				});
-
+				script.src = '/src/views/index/yinghua.js';
 				document.body.appendChild(script);
 
-				// 10秒后移除特效并恢复console
+				// 10秒后移除特效
 				setTimeout(() => {
 					// 移除脚本
 					if (script.parentNode) {
@@ -87,9 +71,6 @@ export default defineComponent({
 							canvas.parentNode.removeChild(canvas);
 						}
 					});
-
-					// 恢复原始的console方法
-					Object.assign(console, originalConsole);
 				}, 10000);
 			} catch (error) {
 				console.error(error);
