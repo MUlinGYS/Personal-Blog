@@ -4,22 +4,12 @@ from models import db, User, Tweet, Resource, TechTip, Archive, ViewCount
 from config import Config
 import datetime
 import secrets  # 添加token
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 import time
 
 app = Flask(__name__, static_folder='dist', static_url_path='')
 app.config.from_object(Config)
 CORS(app)
 db.init_app(app)
-
-# 添加限流器
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["200 per day", "50 per hour"],
-    storage_uri="memory://",
-)
 
 # 存储用户最近一次访问时间的字典
 view_count_timestamps = {}
