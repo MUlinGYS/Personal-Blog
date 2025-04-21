@@ -1,14 +1,27 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from models import db, User, Tweet, Resource, TechTip, Archive, ViewCount
 from config import Config
 import datetime
 import secrets  # 添加token
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../dist', static_url_path='')
 app.config.from_object(Config)
 CORS(app)
 db.init_app(app)
+
+# 添加根路由处理
+@app.route('/')
+def serve_index():
+    return send_from_directory(app.static_folder, 'index.html')
+    
+# 处理其他前端路由
+@app.route('/<path:path>')
+def serve_vue_app(path):
+    try:
+        return send_from_directory(app.static_folder, path)
+    except:
+        return send_from_directory(app.static_folder, 'index.html')
 
 # 初始化数据库
 with app.app_context():
