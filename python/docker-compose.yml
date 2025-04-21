@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8989:8989"
+    volumes:
+      - .:/app
+      - ./instance/blog.db:/app/instance/blog.db
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    restart: always 
