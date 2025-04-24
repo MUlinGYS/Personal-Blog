@@ -1,11 +1,70 @@
 # Personal-Blog
 
-个人博客的搭建与部署（通过使用 vue3+vite+less+element） 2024.2.4 进程记录
+这是一个使用 Vue 3、Vite、Less 和 Element Plus 构建的个人博客项目。
 
----
+## 技术栈
 
+- **前端框架:** [Vue 3](https://vuejs.org/)
+- **构建工具:** [Vite](https://vitejs.dev/)
+- **CSS 预处理器:** [Less](https://lesscss.org/)
+- **UI 库:** [Element Plus](https://element-plus.org/)
+- **包管理器:** [Yarn](https://yarnpkg.com/) / [npm](https://www.npmjs.com/)
+
+## 项目设置
+
+### 安装依赖
+
+```bash
+# 使用 yarn
+yarn install
+
+# 或者使用 npm
+npm install
+```
+
+### 本地开发
+
+启动开发服务器：
+
+```bash
+# 使用 yarn
 yarn dev
 
-已解决问题： /导航栏的添加发布按钮，考虑删除设置按钮或更换导航栏样式 /添加发布文章的页面，考虑添加发布文章的页面的样式 /导航栏组件疑似不主动加载 /增加数据存储的位置 /登录路由守卫和登录账号设置
+# 或者使用 npm
+npm run dev
+```
 
-未解决问题： /设计自己的滚动条 /网站自适应 /页尾的自适应只能在开发环境下生效，生产环境不生效 /考虑增加漫游式引导 /服务器购买地址 https://activity.huaweicloud.com/free_test/index.html#enterprise?utm_source=special&utm_medium=organic&utm_adplace=free-server_seo
+### 生产构建
+
+编译和压缩用于生产环境：
+
+```bash
+# 使用 yarn
+yarn build
+
+# 或者使用 npm
+npm run build
+```
+
+## 项目结构
+
+```
+├── public/            # 静态资源目录 (不会被 Vite 处理)
+├── src/
+│   ├── api/           # API 请求模块
+│   ├── assets/        # 静态资源 (会被 Vite 处理)
+│   ├── components/    # 公共组件
+│   ├── pages/         # 页面级组件 (也可能在 views/)
+│   ├── router/        # 路由配置
+│   ├── store/         # 状态管理 (Pinia/Vuex)
+│   ├── utils/         # 工具函数
+│   ├── views/         # 视图组件 (页面)
+│   ├── App.vue        # 根组件
+│   ├── main.js        # 应用入口文件
+│   └── style.css      # 全局样式 (或 less/scss 文件)
+├── .gitignore         # Git 忽略配置
+├── index.html         # HTML 入口文件
+├── package.json       # 项目依赖和脚本配置
+├── vite.config.js     # Vite 配置文件
+└── README.md          # 项目说明文档
+```
